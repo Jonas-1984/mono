@@ -91,6 +91,53 @@ main {
   transform: translateX(-50%);
 }
 
+/* Dekorative animierte Linie quer durchs Panel */
+/* Position/Höhe hier einstellen: */
+.deco-line {
+  position: absolute;
+  top: 860px;
+  left: 0;
+  width: 100%;
+  height: 160px;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+  /* Fade-Einblendung am linken Panel-Rand, ca. 10 cm (~378px) lang */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 378px);
+  mask-image: linear-gradient(to right, transparent 0, black 378px);
+}
+
+.deco-line-base {
+  fill: none;
+  stroke: #ff1a1a;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 4px rgba(255, 20, 20, 0.9)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
+  stroke-dasharray: 100;
+  animation: deco-line-reveal 6s ease-in-out infinite;
+}
+
+.deco-line-pulse {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  filter: blur(0.8px);
+  animation: deco-line-reveal 6s ease-in-out infinite;
+}
+
+/* Linie zeichnet sich von links nach rechts ein, bleibt die meiste Zeit
+   sichtbar und wird nur kurz vor dem Neustart ausgeblendet */
+@keyframes deco-line-reveal {
+  0% { stroke-dashoffset: 100; }
+  12% { stroke-dashoffset: 0; }
+  92% { stroke-dashoffset: 0; }
+  96% { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 100; }
+}
+
 /* Timeline links im Panel */
 /* Deaktiviert – auf display: block setzen, um sie wieder zu aktivieren */
 .timeline {
