@@ -73,21 +73,32 @@ if (galleryGrid && galleryCells.length > 0) {
   }
 
   function showImage(src) {
-    const bgSize = `${gridRect.width}px ${gridRect.height}px`;
+    const img = new Image();
+    img.onload = () => {
+      // Wie "background-size: cover" – Seitenverhältnis bleibt erhalten,
+      // überschüssiger Bildbereich wird mittig abgeschnitten statt verzerrt.
+      const scale = Math.max(gridRect.width / img.naturalWidth, gridRect.height / img.naturalHeight);
+      const scaledWidth = img.naturalWidth * scale;
+      const scaledHeight = img.naturalHeight * scale;
+      const offsetX = (scaledWidth - gridRect.width) / 2;
+      const offsetY = (scaledHeight - gridRect.height) / 2;
+      const bgSize = `${scaledWidth}px ${scaledHeight}px`;
 
-    cellOffsets.forEach(({ cell, x, y }) => {
-      const activeLayer = cell.querySelector('.gallery-slice.active');
-      const nextLayer = cell.querySelector('.gallery-slice:not(.active)');
+      cellOffsets.forEach(({ cell, x, y }) => {
+        const activeLayer = cell.querySelector('.gallery-slice.active');
+        const nextLayer = cell.querySelector('.gallery-slice:not(.active)');
 
-      nextLayer.style.backgroundImage = `url(${src})`;
-      nextLayer.style.backgroundSize = bgSize;
-      nextLayer.style.backgroundPosition = `-${x}px -${y}px`;
+        nextLayer.style.backgroundImage = `url(${src})`;
+        nextLayer.style.backgroundSize = bgSize;
+        nextLayer.style.backgroundPosition = `-${x + offsetX}px -${y + offsetY}px`;
 
-      requestAnimationFrame(() => {
-        nextLayer.classList.add('active');
-        activeLayer.classList.remove('active');
+        requestAnimationFrame(() => {
+          nextLayer.classList.add('active');
+          activeLayer.classList.remove('active');
+        });
       });
-    });
+    };
+    img.src = src;
   }
 
   measureGallery();

@@ -109,23 +109,25 @@ main {
 
 .deco-line-base {
   fill: none;
-  stroke: #ff1a1a;
-  stroke-width: 2.2;
+  stroke: #ff0000;
+  stroke-width: 1.2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  filter: drop-shadow(0 0 4px rgba(255, 20, 20, 0.9)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
-  stroke-dasharray: 100;
+  filter: drop-shadow(0 0 5px rgba(255, 0, 0, 1)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+  stroke-dasharray: 8 92;
   animation: deco-line-reveal 6s ease-in-out infinite;
 }
 
+/* Auslaufender Schweif hinter dem Signal-Kopf (leicht phasenverzögert) */
 .deco-line-pulse {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.7);
-  stroke-width: 1;
+  stroke: rgba(255, 40, 40, 0.45);
+  stroke-width: 1.4;
   stroke-linecap: round;
-  stroke-dasharray: 100;
-  filter: blur(0.8px);
+  stroke-dasharray: 24 76;
+  filter: blur(2.5px);
   animation: deco-line-reveal 6s ease-in-out infinite;
+  animation-delay: 0.18s;
 }
 
 /* Durchgehender Loop: Linie zeichnet sich immer von links nach rechts,
@@ -133,6 +135,39 @@ main {
 @keyframes deco-line-reveal {
   from { stroke-dashoffset: 100; }
   to { stroke-dashoffset: 0; }
+}
+
+/* Buchstaben entlang des letzten geraden Linienabschnitts, oberhalb der Linie */
+.deco-letters {
+  position: absolute;
+  top: 919px;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.deco-letters span {
+  position: absolute;
+  top: 0;
+  font-size: 5.6rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  background: none;
+  border: none;
+  opacity: 0;
+  /* Timing an die Kopf-Position des Signals auf der Linie angepasst */
+  animation: deco-letter-flash 6s ease-in-out infinite;
+}
+
+/* Nur weiches Fade, kein Glow, maximal 50% Deckkraft */
+@keyframes deco-letter-flash {
+  0%, 100% { opacity: 0; }
+  2% { opacity: 0.5; }
+  8% { opacity: 0.5; }
+  12% { opacity: 0; }
 }
 
 /* Timeline links im Panel */
