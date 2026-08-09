@@ -98,7 +98,7 @@ main {
   top: 860px;
   left: 0;
   width: 100%;
-  height: 160px;
+  height: 200px;
   pointer-events: none;
   z-index: 0;
   overflow: visible;
@@ -128,14 +128,11 @@ main {
   animation: deco-line-reveal 6s ease-in-out infinite;
 }
 
-/* Linie zeichnet sich von links nach rechts ein, bleibt die meiste Zeit
-   sichtbar und wird nur kurz vor dem Neustart ausgeblendet */
+/* Durchgehender Loop: Linie zeichnet sich immer von links nach rechts,
+   springt am Ende sofort zurück und beginnt erneut */
 @keyframes deco-line-reveal {
-  0% { stroke-dashoffset: 100; }
-  12% { stroke-dashoffset: 0; }
-  92% { stroke-dashoffset: 0; }
-  96% { stroke-dashoffset: 100; }
-  100% { stroke-dashoffset: 100; }
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
 }
 
 /* Timeline links im Panel */
