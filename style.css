@@ -132,6 +132,15 @@ main {
   max-width: 1000px;
 }
 
+/* Bild unten rechts im Panel, Breite 15cm, Höhe automatisch (unbeschnitten) */
+.ueberuns-image {
+  position: absolute;
+  bottom: calc(2.5rem + 6cm);
+  right: calc(3rem + 2cm);
+  width: 30cm;
+  height: auto;
+}
+
 .view-content {
   text-align: left;
 }
