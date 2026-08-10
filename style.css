@@ -122,6 +122,16 @@ main {
   padding-left: 1cm;
 }
 
+/* Fließtext-Seiten (Über uns, Leistungen, Projekte): Abstand auch zur rechten Panel-Seite,
+   damit der Text nicht über die volle Breite läuft */
+.text-page {
+  padding-right: 1cm;
+}
+
+.text-page .view-content {
+  max-width: 1000px;
+}
+
 .view-content {
   text-align: left;
 }
@@ -136,8 +146,14 @@ main {
 
 .view-subtitle {
   font-family: 'Montserrat', sans-serif;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 1.2rem;
+  line-height: 1.75;
+  margin-bottom: 1.1rem;
+}
+
+.view-subtitle:last-child {
+  margin-bottom: 0;
 }
 
 .kontakt-layout {
