@@ -135,7 +135,7 @@ main {
 /* Bild unten rechts im Panel, Breite 15cm, Höhe automatisch (unbeschnitten) */
 .ueberuns-image {
   position: absolute;
-  bottom: calc(2.5rem + 6cm);
+  bottom: calc(2.5rem + 3cm);
   right: calc(3rem + 2cm);
   width: 30cm;
   height: auto;
