@@ -115,12 +115,27 @@ if (galleryGrid && galleryCells.length > 0) {
   }, galleryHoldTime);
 }
 
+const contactForm = document.querySelector('.contact-form');
+
+if (contactForm) {
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // TODO: Formular an echten Versand-Endpunkt anbinden
+  });
+}
+
 const menuItems = document.querySelectorAll('.menu-item');
+const views = document.querySelectorAll('.view');
 
 menuItems.forEach((item) => {
   item.addEventListener('click', () => {
     menuItems.forEach((i) => i.classList.remove('active'));
     item.classList.add('active');
+
+    const target = item.dataset.item;
+    views.forEach((view) => {
+      view.classList.toggle('active', view.dataset.view === target);
+    });
   });
 });
 
