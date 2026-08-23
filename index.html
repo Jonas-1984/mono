@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260823">
 </head>
 
 <body>
@@ -286,16 +286,118 @@
         </div>
 
         <div class="view" data-view="leistungen">
+          <div class="leistungen-box-bg">
+            <img class="leistungen-box-image active" src="blackboard/01-drywall.jpg" alt="">
+            <img class="leistungen-box-image" src="" alt="">
+          </div>
+
+          <div class="leistungen-image-wrap">
+            <img class="leistungen-image" src="leistung/1-trockenbau.jpg" alt="">
+          </div>
+
           <div class="view-content">
             <h2 class="view-title">Leistungen</h2>
-            <p class="view-subtitle">Inhalt folgt.</p>
+
+            <div class="leistungen-card">
+              <div class="leistungen-slides">
+                <div class="leistungen-slide active" data-index="0">
+                  <h3>Trockenbauarbeiten</h3>
+                  <p>Errichtung von Trennwänden, Abhangdecken, Vorsatzschalen und Raumaufteilungen.</p>
+                </div>
+                <div class="leistungen-slide" data-index="1">
+                  <h3>Innenputz &amp; Spachtelarbeiten</h3>
+                  <p>Glätten, Ausbessern und Vorbereiten von Wänden und Decken für weitere Beschichtungen.</p>
+                </div>
+                <div class="leistungen-slide" data-index="2">
+                  <h3>Maler- und Lackierarbeiten</h3>
+                  <p>Streichen, Lackieren, Beschichten von Wänden, Türen, Holzflächen und Metall.</p>
+                </div>
+                <div class="leistungen-slide" data-index="3">
+                  <h3>Bodenverlegung</h3>
+                  <p>Verlegen von Laminat, Vinyl, Parkett, Teppichboden oder Fliesen.</p>
+                </div>
+                <div class="leistungen-slide" data-index="4">
+                  <h3>Fliesenarbeiten</h3>
+                  <p>Wand- und Bodenfliesen, Bad- und Küchenfliesen, Abdichtung.</p>
+                </div>
+                <div class="leistungen-slide" data-index="5">
+                  <h3>Sanitär- und Badmodernisierung</h3>
+                  <p>Installation von Waschbecken, WC, Duschen, Armaturen, Rohrleitungen.</p>
+                </div>
+                <div class="leistungen-slide" data-index="6">
+                  <h3>Elektroinstallation im Innenbereich</h3>
+                  <p>Steckdosen, Lichtschalter, Beleuchtung, Kabelverlegung.</p>
+                </div>
+                <div class="leistungen-slide" data-index="7">
+                  <h3>Türen- und Fensterarbeiten</h3>
+                  <p>Einbau von Innentüren, Zargen, Fensterbänken, Reparaturen.</p>
+                </div>
+                <div class="leistungen-slide" data-index="8">
+                  <h3>Küchen- und Möbelmontage</h3>
+                  <p>Aufbau von Küchen, Schränken, Regalen, Arbeitsplatten.</p>
+                </div>
+                <div class="leistungen-slide" data-index="9">
+                  <h3>Renovierung &amp; Modernisierung</h3>
+                  <p>Komplettsanierungen, Teilrenovierungen, Modernisierung von Wohn- und Gewerberäumen.</p>
+                </div>
+                <div class="leistungen-slide" data-index="10">
+                  <h3>Bauendreinigung</h3>
+                  <p>Reinigung nach Bau- oder Renovierungsarbeiten.</p>
+                </div>
+              </div>
+
+              <div class="leistungen-footer">
+                <div class="leistungen-dots">
+                  <button class="leistungen-dot active" data-index="0" aria-label="Seite 1">1</button>
+                  <button class="leistungen-dot" data-index="1" aria-label="Seite 2">2</button>
+                  <button class="leistungen-dot" data-index="2" aria-label="Seite 3">3</button>
+                  <button class="leistungen-dot" data-index="3" aria-label="Seite 4">4</button>
+                  <button class="leistungen-dot" data-index="4" aria-label="Seite 5">5</button>
+                  <button class="leistungen-dot" data-index="5" aria-label="Seite 6">6</button>
+                  <button class="leistungen-dot" data-index="6" aria-label="Seite 7">7</button>
+                  <button class="leistungen-dot" data-index="7" aria-label="Seite 8">8</button>
+                  <button class="leistungen-dot" data-index="8" aria-label="Seite 9">9</button>
+                  <button class="leistungen-dot" data-index="9" aria-label="Seite 10">10</button>
+                  <button class="leistungen-dot" data-index="10" aria-label="Seite 11">11</button>
+                </div>
+                <button class="leistungen-next" type="button">Next</button>
+              </div>
+            </div>
+
           </div>
         </div>
 
         <div class="view" data-view="projekte">
           <div class="view-content">
-            <h2 class="view-title">Projekte</h2>
-            <p class="view-subtitle">Inhalt folgt.</p>
+            <div class="projekte-title-row">
+              <h2 class="view-title">Projekte</h2>
+              <button class="stadtteile-next-btn" id="stadtteile-next-btn" type="button" aria-label="Nächster Stadtteil">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+
+            <div class="stadtteile-hover-info">
+              <h3 id="stadtteile-hover-name">Hamburg</h3>
+              <p id="stadtteile-hover-text">Fahren Sie über einen Stadtteil, um mehr zu erfahren.</p>
+            </div>
+
+            <div class="stadtteile-map-wrap" id="stadtteile-map-wrap"></div>
+
+            <div class="projekte-scope">
+              <div class="projekte-scope-item">
+                <h3>Projekte deutschlandweit</h3>
+                <p>Wir realisieren Bau- und Sanierungsprojekte in ganz Deutschland – zuverlässig, termingerecht
+                  und mit der gewohnten MonoBau-Qualität.</p>
+              </div>
+
+              <div class="projekte-scope-divider-h"></div>
+
+              <div class="projekte-scope-item">
+                <h3>Projekte im Ausland</h3>
+                <p>Auch über die deutschen Landesgrenzen hinaus setzen wir anspruchsvolle Bauvorhaben für unsere
+                  internationalen Kunden um.</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -324,30 +426,79 @@
                 <div class="form-row form-row-checkbox">
                   <input type="checkbox" id="contact-privacy" name="privacy" required>
                   <label for="contact-privacy">
-                    Ich habe die <a href="#" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und stimme
+                    Ich habe die <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und stimme
                     der Verarbeitung meiner Daten zu.
                   </label>
                 </div>
 
-                <button type="submit" class="form-submit">Nachricht senden</button>
+                <button type="submit" class="form-submit">
+                  <span class="form-submit-full">Nachricht senden</span>
+                  <span class="form-submit-short">Senden</span>
+                </button>
               </form>
+            </div>
+
+            <div class="contact-photo">
+              <div class="contact-photo-frame">
+                <img class="contact-photo-blur" src="images/seo.jpeg" alt="" aria-hidden="true">
+                <img class="contact-photo-sharp" src="images/seo.jpeg" alt="Amir Hossein Sharifian">
+              </div>
+              <p class="contact-info-label">Geschäftsführer:</p>
+              <p class="contact-photo-name">Amir Hossein Sharifian</p>
             </div>
 
             <div class="contact-side">
               <div class="contact-divider"></div>
               <div class="contact-right">
                 <div class="contact-map">
-                  <iframe src="https://www.google.com/maps?q=Pappelwisch+5,+22415+Hamburg&output=embed" width="100%"
+                  <iframe class="contact-map-frame"
+                    data-src="https://www.google.com/maps?q=Pappelwisch+5,+22415+Hamburg&output=embed" width="100%"
                     height="420" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Standort Mono Bau">
                   </iframe>
+                  <div class="contact-map-placeholder">
+                    <p>Die Karte wird erst nach Ihrer Zustimmung zu externen Inhalten geladen.</p>
+                    <button type="button" class="form-submit contact-map-enable">Karte laden &amp; Cookies akzeptieren</button>
+                  </div>
                 </div>
                 <div class="contact-info">
                   <p class="contact-info-name">Mono Bau</p>
-                  <p>Pappelwisch 5, 22415 Hamburg</p>
-                  <p>Tel: 040 589 695 40</p>
-                  <p>Mobile: +49 152 54184659</p>
-                  <p class="contact-info-label">Geschäftsführer:</p>
-                  <p>Amir Hossein Sharifian</p>
+                  <p class="contact-info-line">
+                    <svg viewBox="0 0 24 24" class="contact-icon">
+                      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                    <span>Pappelwisch 5, 22415 Hamburg</span>
+                  </p>
+                  <p class="contact-info-line">
+                    <svg viewBox="0 0 24 24" class="contact-icon">
+                      <path d="M14 6h8" />
+                      <path d="m18 2 4 4-4 4" />
+                      <path
+                        d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" />
+                    </svg>
+                    <span>Tel: 040 589 695 40</span>
+                  </p>
+                  <p class="contact-info-line">
+                    <svg viewBox="0 0 24 24" class="contact-icon">
+                      <rect width="14" height="20" x="5" y="2" rx="2" ry="2" />
+                      <path d="M12 18h.01" />
+                    </svg>
+                    <span>Mobile: +49 152 54184659</span>
+                  </p>
+                  <p class="contact-info-line">
+                    <svg viewBox="0 0 24 24" class="contact-icon">
+                      <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+                      <rect x="2" y="4" width="20" height="16" rx="2" />
+                    </svg>
+                    <a href="mailto:info@monobau.eu">info@monobau.eu</a>
+                  </p>
+                  <p class="contact-info-line">
+                    <svg viewBox="0 0 24 24" class="contact-icon">
+                      <path d="m15 6 2 2 4-4" />
+                      <path d="M2 12h20A10 10 0 1 1 12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 4-10" />
+                    </svg>
+                    <a href="https://www.monobau.eu" target="_blank" rel="noopener">www.monobau.eu</a>
+                  </p>
                 </div>
               </div>
             </div>
@@ -419,12 +570,60 @@
           </a>
         </div>
 
-        <div class="copyright">© Designed by Jonas Shojaei</div>
+        <div class="copyright">
+          <button type="button" class="cookie-settings-link">Cookie-Einstellungen</button>
+          © Designed by Jonas Shojaei
+        </div>
       </div>
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <!-- Cookie-Consent-Banner -->
+  <div class="cookie-banner" id="cookie-banner" hidden>
+    <div class="cookie-banner-box">
+      <div class="cookie-banner-main">
+        <h3>Cookie-Einstellungen</h3>
+        <p>
+          Wir nutzen auf dieser Website technisch notwendige Funktionen sowie optional externe Inhalte
+          (Google Maps), die beim Laden Cookies setzen und Daten an Drittanbieter übermitteln können.
+          Sie können selbst entscheiden, welche Kategorien Sie zulassen. Mehr dazu in unserer
+          <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a>.
+        </p>
+
+        <div class="cookie-banner-categories" id="cookie-banner-categories" hidden>
+          <div class="cookie-category">
+            <div class="cookie-category-head">
+              <span>Technisch notwendig</span>
+              <span class="cookie-toggle cookie-toggle-locked" aria-hidden="true"><span class="cookie-toggle-dot"></span></span>
+            </div>
+            <p>Immer aktiv – erforderlich für den grundlegenden Betrieb der Website (z. B. Speicherung Ihrer Cookie-Auswahl).</p>
+          </div>
+
+          <div class="cookie-category">
+            <div class="cookie-category-head">
+              <span>Externe Inhalte (Google Maps)</span>
+              <button type="button" class="cookie-toggle" id="cookie-toggle-maps" role="switch" aria-checked="false" aria-label="Google Maps zulassen">
+                <span class="cookie-toggle-dot"></span>
+              </button>
+            </div>
+            <p>Lädt die interaktive Standortkarte von Google. Dabei wird Ihre IP-Adresse an Google übertragen.</p>
+          </div>
+        </div>
+
+        <div class="cookie-banner-actions">
+          <button type="button" class="cookie-btn cookie-btn-ghost" id="cookie-customize-btn">Personalisieren</button>
+          <button type="button" class="cookie-btn cookie-btn-outline" id="cookie-reject-btn">Ablehnen</button>
+          <button type="button" class="cookie-btn cookie-btn-solid" id="cookie-accept-btn">Alle akzeptieren</button>
+        </div>
+
+        <div class="cookie-banner-save" id="cookie-save-row" hidden>
+          <button type="button" class="cookie-btn cookie-btn-solid" id="cookie-save-btn">Auswahl speichern</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js?v=20260823"></script>
 </body>
 
 </html>

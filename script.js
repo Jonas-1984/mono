@@ -1,3 +1,198 @@
+// Desktop-Design (1600x1200) bei kleineren Fenstern/Bildschirmen proportional
+// verkleinern, statt es abzuschneiden – exakt dasselbe Layout, nur kleiner.
+// Gilt nur oberhalb der Mobile-Grenze (600px); die eigene Mobile-Ansicht
+// (@media max-width:600px in style.css) bleibt davon unberührt.
+const desktopScaleEl = document.querySelector('.glass-panel');
+const DESKTOP_PANEL_WIDTH = 1600;
+const DESKTOP_PANEL_HEIGHT = 1200;
+const MOBILE_BREAKPOINT = 600;
+
+function scaleDesktopPanel() {
+  if (!desktopScaleEl) return;
+
+  if (window.innerWidth <= MOBILE_BREAKPOINT) {
+    desktopScaleEl.style.transform = '';
+    return;
+  }
+
+  const margin = 40;
+  const scaleByWidth = (window.innerWidth - margin) / DESKTOP_PANEL_WIDTH;
+  const scaleByHeight = (window.innerHeight - margin) / DESKTOP_PANEL_HEIGHT;
+  const scale = Math.min(1, scaleByWidth, scaleByHeight);
+
+  desktopScaleEl.style.transform = scale < 1 ? `scale(${scale})` : '';
+}
+
+scaleDesktopPanel();
+window.addEventListener('resize', scaleDesktopPanel);
+
+// Hamburg-Stadtteile-Karte: SVG laden und inline einfügen, damit CSS die
+// einzelnen <path>-Elemente (Stadtteile) direkt stylen kann
+const stadtteileMapWrap = document.getElementById('stadtteile-map-wrap');
+
+const stadtteileHoverName = document.getElementById('stadtteile-hover-name');
+const stadtteileHoverText = document.getElementById('stadtteile-hover-text');
+const stadtteileDefaultName = stadtteileHoverName ? stadtteileHoverName.textContent : '';
+const stadtteileDefaultText = stadtteileHoverText ? stadtteileHoverText.textContent : '';
+
+if (stadtteileMapWrap) {
+  fetch('images/hamburg-stadtteile.svg')
+    .then((res) => res.text())
+    .then((svgText) => {
+      stadtteileMapWrap.innerHTML = svgText;
+    })
+    .catch(() => {
+      stadtteileMapWrap.textContent = 'Karte konnte nicht geladen werden.';
+    });
+
+  // Feste Adressen pro Stadtteil – hier weitere Projekte eintragen
+  // (Schlüssel = path-id aus images/hamburg-stadtteile.svg, Schema: stadtteil-<name-slug>;
+  // ein Stadtteil kann mehrere Projekt-Adressen haben)
+  const stadtteilAddresses = {
+    'stadtteil-langenhorn': ['Langenhorner Chaussee, 22419 Hamburg'],
+    'stadtteil-rahlstedt': ['Soldkampweg, 22145 Hamburg', 'Nydamer Weg, 22145 Hamburg'],
+    'stadtteil-eilbek': ['Landwehr, 22087 Hamburg'],
+    'stadtteil-barmbek-nord': ['Fühlsbüttler Straße, 22305 Hamburg', 'Drosselstraße, 22305 Hamburg'],
+    'stadtteil-gro-borstel': ['Obenhauptstraße, 22335 Hamburg'],
+    'stadtteil-wellingsb-ttel': ['Eckerkamp, 22391 Hamburg'],
+    'stadtteil-billstedt': ['Möllner Landstraße, 22111 Hamburg'],
+    'stadtteil-harvestehude': ['Rothenbaumchaussee, 20149 Hamburg', 'Hallerstraße, 20146 Hamburg'],
+    'stadtteil-eppendorf': ['Münsterstraße, 22529 Hamburg', 'Eppendorfer Landstraße, 20249 Hamburg'],
+    'stadtteil-alsterdorf': [
+      'Brabandstraße, 22297 Hamburg',
+      'Alsterdorfer Straße, 22297 Hamburg',
+      'Rathenaustraße, 22297 Hamburg',
+    ],
+    'stadtteil-hafencity': ['Sandtorkai, 20457 Hamburg', 'Brooktorkai, 20457 Hamburg', 'Am Kaiserkai, 20457 Hamburg'],
+    'stadtteil-lokstedt': ['Lembekstraße, 22529 Hamburg'],
+    'stadtteil-eimsb-ttel': ['Heußweg, 20255 Hamburg', 'Kleiner Schäferkamp, 20357 Hamburg'],
+    'stadtteil-volksdorf': ['Claus-Ferck-Straße, 22359 Hamburg'],
+    'stadtteil-dulsberg': ['Eulenkamp, 22049 Hamburg'],
+  };
+
+  // Grenzen benachbarter Stadtteile überlappen sich teils minimal (jeder
+  // Stadtteil wurde beim SVG-Export einzeln vereinfacht/entrundet), dadurch
+  // kann an einem Punkt mehr als ein <path> übereinanderliegen. Von allen
+  // dort gestapelten Pfaden wird der mit der kleinsten Fläche genommen –
+  // das ist zuverlässig der kleinere/genauere Stadtteil (z. B. HafenCity),
+  // nicht der große, zufällig mit-überlappende Nachbar.
+  function pickSmallestPathAtPoint(x, y) {
+    const stack = document.elementsFromPoint(x, y);
+    let best = null;
+    let bestArea = Infinity;
+    for (const el of stack) {
+      const path = el.closest ? el.closest('path') : null;
+      if (!path || !stadtteileMapWrap.contains(path)) continue;
+      const bbox = path.getBBox();
+      const area = bbox.width * bbox.height;
+      if (area < bestArea) {
+        bestArea = area;
+        best = path;
+      }
+    }
+    return best;
+  }
+
+  function showStadtteilInfo(path) {
+    if (!path || !stadtteileHoverName || !stadtteileHoverText) return;
+
+    const name = path.dataset.name;
+    const addresses = stadtteilAddresses[path.id];
+    stadtteileHoverName.textContent = name;
+
+    if (addresses && addresses.length) {
+      stadtteileHoverText.innerHTML = addresses.join('<br>');
+    } else {
+      stadtteileHoverText.textContent = `Aktuelle und abgeschlossene Bauprojekte in ${name}.`;
+    }
+  }
+
+  // Einzige Stelle, die den dauerhaften roten "ausgewählt"-Zustand setzt –
+  // egal ob per Kartentipp oder Pfeil-Button ausgewählt wurde, es darf immer
+  // nur ein Stadtteil gleichzeitig markiert sein, daher hier zentral zuerst
+  // alle vorherigen Markierungen entfernen.
+  function selectStadtteilPath(path) {
+    if (!path) return;
+
+    stadtteileMapWrap.querySelectorAll('path.stadtteile-selected').forEach((p) => {
+      p.classList.remove('stadtteile-selected');
+    });
+    path.classList.add('stadtteile-selected');
+
+    const paths = stadtteileMapWrap.querySelectorAll('path');
+    stadtteileNextIndex = Array.prototype.indexOf.call(paths, path);
+
+    showStadtteilInfo(path);
+  }
+
+  stadtteileMapWrap.addEventListener('mouseover', (e) => {
+    showStadtteilInfo(e.target.closest('path'));
+  });
+
+  stadtteileMapWrap.addEventListener('mouseout', (e) => {
+    const path = e.target.closest('path');
+    if (!path || !stadtteileHoverName || !stadtteileHoverText) return;
+
+    stadtteileHoverName.textContent = stadtteileDefaultName;
+    stadtteileHoverText.textContent = stadtteileDefaultText;
+  });
+
+  // Touch-Geräte: "mouseover" feuert dort unzuverlässig (mal gar nicht, mal
+  // verzögert), daher zusätzlich auf "click" reagieren – das Tippen auf einen
+  // Stadtteil zeigt die Infos dann garantiert an und bleibt bis zur nächsten
+  // Auswahl sichtbar (kein "mouseout" bei Touch).
+  stadtteileMapWrap.addEventListener('click', (e) => {
+    selectStadtteilPath(pickSmallestPathAtPoint(e.clientX, e.clientY));
+  });
+
+  // Zusätzlich eigene Tipp-Erkennung über touchstart/touchend: bei kleinen/
+  // schmalen Stadtteilen (z. B. Langenhorn) verschiebt sich der Finger beim
+  // Tippen minimal, der Browser wertet das dann als Scroll-Geste und
+  // unterdrückt den folgenden "click" komplett. Hier wird über die Distanz
+  // zwischen Start- und Endpunkt selbst geprüft, ob es ein Tipp war (kein
+  // Scroll), und die Auswertung erfolgt an der Endposition (touchend) – exakt
+  // wie beim normalen Klick, nur ohne von der Klick-Unterdrückung des
+  // Browsers abhängig zu sein. Bleibt passiv, Scrollen bleibt unberührt.
+  let stadtteileTouchStartX = 0;
+  let stadtteileTouchStartY = 0;
+  let stadtteileTouchStartTime = 0;
+
+  stadtteileMapWrap.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    if (!touch) return;
+    stadtteileTouchStartX = touch.clientX;
+    stadtteileTouchStartY = touch.clientY;
+    stadtteileTouchStartTime = Date.now();
+  }, { passive: true });
+
+  stadtteileMapWrap.addEventListener('touchend', (e) => {
+    const touch = e.changedTouches[0];
+    if (!touch) return;
+
+    const movedX = Math.abs(touch.clientX - stadtteileTouchStartX);
+    const movedY = Math.abs(touch.clientY - stadtteileTouchStartY);
+    const elapsed = Date.now() - stadtteileTouchStartTime;
+    if (movedX > 10 || movedY > 10 || elapsed > 500) return;
+
+    selectStadtteilPath(pickSmallestPathAtPoint(touch.clientX, touch.clientY));
+  }, { passive: true });
+
+  // Pfeil neben dem Seiten-Titel (Mobile): schaltet Stadtteil für Stadtteil
+  // durch, ohne dass exakt auf die Karte getippt werden muss
+  const stadtteileNextBtn = document.getElementById('stadtteile-next-btn');
+  let stadtteileNextIndex = -1;
+
+  if (stadtteileNextBtn) {
+    stadtteileNextBtn.addEventListener('click', () => {
+      const paths = stadtteileMapWrap.querySelectorAll('path');
+      if (!paths.length) return;
+
+      const nextIndex = (stadtteileNextIndex + 1) % paths.length;
+      selectStadtteilPath(paths[nextIndex]);
+    });
+  }
+}
+
 // Wetter-Widget – Open-Meteo (kostenlos, kein API-Key nötig)
 const weatherIcon = document.querySelector('.weather-icon');
 const weatherTemp = document.querySelector('.weather-temp');
@@ -50,7 +245,20 @@ if (weatherTime && weatherDate && weatherWeekday) {
   setInterval(updateClock, 1000);
 }
 
-const galleryImages = Array.from({ length: 12 }, (_, i) => `gallery/${i + 1}.jpg`);
+const galleryImages = [
+  'levels/01-clean.jpg',
+  'levels/02-ready.jpg',
+  'levels/03-wall.jpg',
+  'levels/04-windows.jpg',
+  'levels/05-installation.jpg',
+  'levels/06-colored.jpg',
+  'levels/07-parkett.jpg',
+  'levels/08-elektrik.jpg',
+  'levels/09-kitchen.jpg',
+  'levels/10-tile.jpg',
+  'levels/11-cleaning.jpg',
+  'levels/12-finish.jpg',
+];
 const galleryHoldTime = 6000;
 
 const galleryGrid = document.querySelector('.gallery-grid');
@@ -122,6 +330,101 @@ if (contactForm) {
     e.preventDefault();
     // TODO: Formular an echten Versand-Endpunkt anbinden
   });
+}
+
+// Leistungen: Karte mit 11 Seiten – Punkte/Next zum manuellen Wechseln,
+// automatischer Wechsel alle 6 Minuten
+const leistungenSlides = document.querySelectorAll('.leistungen-slide');
+const leistungenDots = document.querySelectorAll('.leistungen-dot');
+const leistungenNext = document.querySelector('.leistungen-next');
+
+const leistungenImages = [
+  'leistung/1-trockenbau.jpg',
+  'leistung/2-innenputz.jpg',
+  'leistung/3-maler.jpg',
+  'leistung/4-boden.jpg',
+  'leistung/5-fliesen.jpg',
+  'leistung/6-sanitar.jpg',
+  'leistung/7-elektro.jpg',
+  'leistung/8-door.jpg',
+  'leistung/9-kitchen.jpg',
+  'leistung/10-reno.jpg',
+  'leistung/11-clean.jpg',
+];
+const leistungenImageWrap = document.querySelector('.leistungen-image-wrap');
+const leistungenImageEl = document.querySelector('.leistungen-image');
+
+const leistungenBoxImages = [
+  'blackboard/01-drywall.jpg',
+  'blackboard/02-putz.jpg',
+  'blackboard/03-colored.jpg',
+  'blackboard/04-floor.jpg',
+  'blackboard/05-teils.jpg',
+  'blackboard/06-bathroom.jpg',
+  'blackboard/07-electrik.jpg',
+  'blackboard/08-door.jpg',
+  'blackboard/09-kitchens.jpg',
+  'blackboard/10-reno.jpg',
+  'blackboard/11-cleans.jpg',
+];
+const leistungenBoxImageEls = document.querySelectorAll('.leistungen-box-image');
+
+if (leistungenSlides.length > 0) {
+  const leistungenAutoDelay = 6 * 1000;
+  let leistungenIndex = 0;
+  let leistungenTimer;
+
+  function goToLeistungenSlide(index) {
+    leistungenIndex = (index + leistungenSlides.length) % leistungenSlides.length;
+
+    leistungenSlides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === leistungenIndex);
+    });
+    leistungenDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === leistungenIndex);
+    });
+
+    if (leistungenImageEl && leistungenImageWrap) {
+      leistungenImageEl.src = leistungenImages[leistungenIndex];
+      leistungenImageWrap.classList.remove('leistungen-image-fade');
+      void leistungenImageWrap.offsetWidth;
+      leistungenImageWrap.classList.add('leistungen-image-fade');
+    }
+
+    if (leistungenBoxImageEls.length === 2) {
+      const activeLayer = document.querySelector('.leistungen-box-image.active');
+      const nextLayer = [...leistungenBoxImageEls].find((el) => el !== activeLayer);
+
+      nextLayer.src = leistungenBoxImages[leistungenIndex];
+      requestAnimationFrame(() => {
+        nextLayer.classList.add('active');
+        activeLayer.classList.remove('active');
+      });
+    }
+  }
+
+  function restartLeistungenTimer() {
+    clearInterval(leistungenTimer);
+    leistungenTimer = setInterval(() => {
+      goToLeistungenSlide(leistungenIndex + 1);
+    }, leistungenAutoDelay);
+  }
+
+  leistungenDots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      goToLeistungenSlide(Number(dot.dataset.index));
+      restartLeistungenTimer();
+    });
+  });
+
+  if (leistungenNext) {
+    leistungenNext.addEventListener('click', () => {
+      goToLeistungenSlide(leistungenIndex + 1);
+      restartLeistungenTimer();
+    });
+  }
+
+  restartLeistungenTimer();
 }
 
 const menuItems = document.querySelectorAll('.menu-item');
@@ -268,4 +571,140 @@ if (commentLine && commentTrack && commentItems.length > 0) {
 
   goTo(0, false);
   requestAnimationFrame(updateFocus);
+}
+
+// Cookie-Consent: Akzeptieren / Ablehnen / Personalisieren
+const cookieConsentKey = 'mono-cookie-consent';
+
+const cookieBanner = document.getElementById('cookie-banner');
+const cookieCategories = document.getElementById('cookie-banner-categories');
+const cookieSaveRow = document.getElementById('cookie-save-row');
+const cookieMapsToggle = document.getElementById('cookie-toggle-maps');
+const cookieAcceptBtn = document.getElementById('cookie-accept-btn');
+const cookieRejectBtn = document.getElementById('cookie-reject-btn');
+const cookieCustomizeBtn = document.getElementById('cookie-customize-btn');
+const cookieSaveBtn = document.getElementById('cookie-save-btn');
+const cookieSettingsLink = document.querySelector('.cookie-settings-link');
+const contactMapFrame = document.querySelector('.contact-map-frame');
+const contactMapPlaceholder = document.querySelector('.contact-map-placeholder');
+const contactMapEnableBtn = document.querySelector('.contact-map-enable');
+
+function readCookieConsent() {
+  try {
+    return JSON.parse(localStorage.getItem(cookieConsentKey));
+  } catch (e) {
+    return null;
+  }
+}
+
+function saveCookieConsent(consent) {
+  try {
+    localStorage.setItem(cookieConsentKey, JSON.stringify({ ...consent, date: new Date().toISOString() }));
+  } catch (e) {
+    // localStorage nicht verfügbar – Auswahl gilt nur für diese Sitzung
+  }
+}
+
+function applyCookieConsent(consent) {
+  if (!contactMapFrame || !contactMapPlaceholder) return;
+
+  if (consent && consent.maps) {
+    if (!contactMapFrame.src) {
+      contactMapFrame.src = contactMapFrame.dataset.src;
+    }
+    contactMapPlaceholder.hidden = true;
+  } else {
+    contactMapPlaceholder.hidden = false;
+  }
+
+  if (cookieMapsToggle) {
+    const active = !!(consent && consent.maps);
+    cookieMapsToggle.setAttribute('aria-checked', String(active));
+  }
+}
+
+function openCookieBanner() {
+  if (!cookieBanner) return;
+  cookieBanner.hidden = false;
+}
+
+function closeCookieBanner() {
+  if (!cookieBanner) return;
+  cookieBanner.hidden = true;
+  if (cookieCategories) cookieCategories.hidden = true;
+  if (cookieSaveRow) cookieSaveRow.hidden = true;
+}
+
+if (cookieBanner) {
+  const existingConsent = readCookieConsent();
+  applyCookieConsent(existingConsent);
+
+  if (!existingConsent) {
+    openCookieBanner();
+  }
+
+  if (cookieAcceptBtn) {
+    cookieAcceptBtn.addEventListener('click', () => {
+      const consent = { necessary: true, maps: true };
+      saveCookieConsent(consent);
+      applyCookieConsent(consent);
+      closeCookieBanner();
+    });
+  }
+
+  if (cookieRejectBtn) {
+    cookieRejectBtn.addEventListener('click', () => {
+      const consent = { necessary: true, maps: false };
+      saveCookieConsent(consent);
+      applyCookieConsent(consent);
+      closeCookieBanner();
+    });
+  }
+
+  if (cookieCustomizeBtn) {
+    cookieCustomizeBtn.addEventListener('click', () => {
+      if (cookieCategories) cookieCategories.hidden = false;
+      if (cookieSaveRow) cookieSaveRow.hidden = false;
+    });
+  }
+
+  if (cookieMapsToggle) {
+    cookieMapsToggle.addEventListener('click', () => {
+      const active = cookieMapsToggle.getAttribute('aria-checked') === 'true';
+      cookieMapsToggle.setAttribute('aria-checked', String(!active));
+    });
+  }
+
+  if (cookieSaveBtn) {
+    cookieSaveBtn.addEventListener('click', () => {
+      const consent = {
+        necessary: true,
+        maps: cookieMapsToggle ? cookieMapsToggle.getAttribute('aria-checked') === 'true' : false,
+      };
+      saveCookieConsent(consent);
+      applyCookieConsent(consent);
+      closeCookieBanner();
+    });
+  }
+
+  if (cookieSettingsLink) {
+    cookieSettingsLink.addEventListener('click', () => {
+      const consent = readCookieConsent();
+      if (cookieMapsToggle) {
+        cookieMapsToggle.setAttribute('aria-checked', String(!!(consent && consent.maps)));
+      }
+      if (cookieCategories) cookieCategories.hidden = false;
+      if (cookieSaveRow) cookieSaveRow.hidden = false;
+      openCookieBanner();
+    });
+  }
+
+  if (contactMapEnableBtn) {
+    contactMapEnableBtn.addEventListener('click', () => {
+      const consent = { necessary: true, maps: true };
+      saveCookieConsent(consent);
+      applyCookieConsent(consent);
+      closeCookieBanner();
+    });
+  }
 }
