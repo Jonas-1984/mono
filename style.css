@@ -5,7 +5,8 @@
   font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   color: #f2f2f5;
   overflow: hidden;
@@ -68,13 +69,11 @@ main {
   inset: 0;
   border-radius: 10px;
   padding: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(199, 29, 29, 0.9),
-    rgba(255, 156, 156, 0.05) 30%,
-    rgba(235, 172, 172, 0.202) 70%,
-    rgba(255, 47, 47, 0.6)
-  );
+  background: linear-gradient(135deg,
+      rgba(199, 29, 29, 0.9),
+      rgba(255, 156, 156, 0.05) 30%,
+      rgba(235, 172, 172, 0.202) 70%,
+      rgba(255, 47, 47, 0.6));
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -200,15 +199,13 @@ main {
   height: calc(100% - 2cm);
   flex-shrink: 0;
   transform: translateY(-1cm);
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.35) 22%,
-    #ff0033 40%,
-    #ff0033 60%,
-    rgba(255, 255, 255, 0.35) 78%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.35) 22%,
+      #ff0033 40%,
+      #ff0033 60%,
+      rgba(255, 255, 255, 0.35) 78%,
+      rgba(255, 255, 255, 0) 100%);
   border: none;
 }
 
@@ -227,8 +224,15 @@ main {
 }
 
 @keyframes contact-info-in {
-  from { opacity: 0; transform: translate(-24px, -4cm); }
-  to { opacity: 1; transform: translate(0, -4cm); }
+  from {
+    opacity: 0;
+    transform: translate(-24px, -4cm);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(0, -4cm);
+  }
 }
 
 /* Personal-Foto links neben der Trennlinie, kommt von rechts (aus Richtung der Linie) herein */
@@ -248,8 +252,15 @@ main {
 }
 
 @keyframes contact-photo-in {
-  from { opacity: 0; transform: translate(40px, -50%); }
-  to { opacity: 1; transform: translate(0, -50%); }
+  from {
+    opacity: 0;
+    transform: translate(40px, -50%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
 }
 
 .contact-photo-frame {
@@ -266,13 +277,11 @@ main {
   inset: 0;
   border-radius: 10px;
   padding: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(199, 29, 29, 0.9),
-    rgba(255, 156, 156, 0.05) 30%,
-    rgba(235, 172, 172, 0.202) 70%,
-    rgba(255, 47, 47, 0.6)
-  );
+  background: linear-gradient(135deg,
+      rgba(199, 29, 29, 0.9),
+      rgba(255, 156, 156, 0.05) 30%,
+      rgba(235, 172, 172, 0.202) 70%,
+      rgba(255, 47, 47, 0.6));
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -335,13 +344,11 @@ main {
   inset: 0;
   border-radius: 10px;
   padding: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(199, 29, 29, 0.9),
-    rgba(255, 156, 156, 0.05) 30%,
-    rgba(235, 172, 172, 0.202) 70%,
-    rgba(255, 47, 47, 0.6)
-  );
+  background: linear-gradient(135deg,
+      rgba(199, 29, 29, 0.9),
+      rgba(255, 156, 156, 0.05) 30%,
+      rgba(235, 172, 172, 0.202) 70%,
+      rgba(255, 47, 47, 0.6));
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -575,13 +582,11 @@ main {
   inset: 0;
   border-radius: 10px;
   padding: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(199, 29, 29, 0.9),
-    rgba(255, 156, 156, 0.05) 30%,
-    rgba(235, 172, 172, 0.202) 70%,
-    rgba(255, 47, 47, 0.6)
-  );
+  background: linear-gradient(135deg,
+      rgba(199, 29, 29, 0.9),
+      rgba(255, 156, 156, 0.05) 30%,
+      rgba(235, 172, 172, 0.202) 70%,
+      rgba(255, 47, 47, 0.6));
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -602,8 +607,15 @@ main {
 }
 
 @keyframes leistungen-image-in {
-  from { opacity: 0; transform: translate(-60px, -50%); }
-  to { opacity: 1; transform: translate(0, -50%); }
+  from {
+    opacity: 0;
+    transform: translate(-60px, -50%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
 }
 
 .leistungen-card::before {
@@ -612,13 +624,11 @@ main {
   inset: 0;
   border-radius: 10px;
   padding: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(199, 29, 29, 0.9),
-    rgba(255, 156, 156, 0.05) 30%,
-    rgba(235, 172, 172, 0.202) 70%,
-    rgba(255, 47, 47, 0.6)
-  );
+  background: linear-gradient(135deg,
+      rgba(199, 29, 29, 0.9),
+      rgba(255, 156, 156, 0.05) 30%,
+      rgba(235, 172, 172, 0.202) 70%,
+      rgba(255, 47, 47, 0.6));
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -768,8 +778,13 @@ main {
 /* Durchgehender Loop: Linie zeichnet sich immer von links nach rechts,
    springt am Ende sofort zurück und beginnt erneut */
 @keyframes deco-line-reveal {
-  from { stroke-dashoffset: 100; }
-  to { stroke-dashoffset: 0; }
+  from {
+    stroke-dashoffset: 100;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Buchstaben entlang des letzten geraden Linienabschnitts, oberhalb der Linie */
@@ -799,10 +814,23 @@ main {
 
 /* Nur weiches Fade, kein Glow, maximal 20% Deckkraft */
 @keyframes deco-letter-flash {
-  0%, 100% { opacity: 0; }
-  2% { opacity: 0.2; }
-  8% { opacity: 0.2; }
-  12% { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  2% {
+    opacity: 0.2;
+  }
+
+  8% {
+    opacity: 0.2;
+  }
+
+  12% {
+    opacity: 0;
+  }
 }
 
 /* Timeline links im Panel */
@@ -913,12 +941,10 @@ main {
   inset: 0;
   border-radius: 999px;
   padding: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 20, 20, 1),
-    rgba(255, 255, 255, 0.759) 45%,
-    rgba(255, 20, 20, 1) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 20, 20, 1),
+      rgba(255, 255, 255, 0.759) 45%,
+      rgba(255, 20, 20, 1) 100%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -1036,13 +1062,11 @@ main {
   inset: 0;
   border-radius: 6px;
   padding: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(199, 29, 29, 0.9),
-    rgba(255, 156, 156, 0.05) 30%,
-    rgba(235, 172, 172, 0.202) 70%,
-    rgba(255, 47, 47, 0.6)
-  );
+  background: linear-gradient(135deg,
+      rgba(199, 29, 29, 0.9),
+      rgba(255, 156, 156, 0.05) 30%,
+      rgba(235, 172, 172, 0.202) 70%,
+      rgba(255, 47, 47, 0.6));
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -1056,11 +1080,25 @@ main {
 }
 
 /* Zellhöhen hier einstellen: */
-.gallery-cell-left { height: 640px; }
-.gallery-cell-mid-top { height: 210px; }
-.gallery-cell-mid-bottom { height: 340px; }
-.gallery-cell-right-top { height: 330px; }
-.gallery-cell-right-bottom { height: 280px; }
+.gallery-cell-left {
+  height: 640px;
+}
+
+.gallery-cell-mid-top {
+  height: 210px;
+}
+
+.gallery-cell-mid-bottom {
+  height: 340px;
+}
+
+.gallery-cell-right-top {
+  height: 330px;
+}
+
+.gallery-cell-right-bottom {
+  height: 280px;
+}
 
 .gallery-slice {
   position: absolute;
@@ -1211,13 +1249,11 @@ main {
   inset: 0;
   border-radius: 12px;
   padding: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(199, 29, 29, 0.9),
-    rgba(255, 156, 156, 0.05) 30%,
-    rgba(235, 172, 172, 0.202) 70%,
-    rgba(255, 47, 47, 0.6)
-  );
+  background: linear-gradient(135deg,
+      rgba(199, 29, 29, 0.9),
+      rgba(255, 156, 156, 0.05) 30%,
+      rgba(235, 172, 172, 0.202) 70%,
+      rgba(255, 47, 47, 0.6));
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -1491,10 +1527,6 @@ main {
   cursor: pointer;
 }
 
-/* Einzelne Stadtteile anhand ihrer ID einfärben */
-/* (echte IDs aus den Hamburger Geodaten, Schema: stadtteil-<name-slug>) */
-.stadtteile-map-wrap path#stadtteil-altona-altstadt { fill: #e74c3c; }
-
 /* Hover-Effekt: flaches Rot aus dem Website-Theme, kein Verlauf */
 .stadtteile-map-wrap path:hover {
   fill: #ff2f2f;
@@ -1511,9 +1543,147 @@ main {
   display: none;
 }
 
+/* Suchleiste zwischen Seitentitel und Stadtteil-Info: Stadtteil, Straße,
+   Postleitzahl oder ganzes Projekt suchen - gleicher Glas-Look/roter
+   Verlaufsrahmen wie die restlichen Elemente der Seite */
+.projekte-search-wrap {
+  position: relative;
+  width: 420px;
+  margin-top: 0.8rem;
+}
+
+.projekte-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  background: rgba(20, 20, 20, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.projekte-search-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(199, 29, 29, 0.9),
+    rgba(255, 156, 156, 0.05) 30%,
+    rgba(235, 172, 172, 0.202) 70%,
+    rgba(255, 47, 47, 0.6)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Lupe rechts in der Suchleiste, klickbar (startet die Suche/öffnet die
+   Ergebnisse) - dezentes rotes Glühen als Hervorhebung beim Hover */
+.projekte-search-icon-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0.2rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.15s ease;
+}
+
+.projekte-search-icon-btn:hover {
+  color: rgba(255, 255, 255, 0.85);
+  filter: drop-shadow(0 0 5px rgba(255, 47, 47, 0.85));
+}
+
+.projekte-search-input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.projekte-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.projekte-search-results {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-height: 260px;
+  overflow-y: auto;
+  border-radius: 10px;
+  background: rgba(15, 15, 15, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.55),
+    0 8px 20px rgba(0, 0, 0, 0.45);
+  display: none;
+}
+
+.projekte-search-results.visible {
+  display: block;
+}
+
+.projekte-search-result {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 1rem;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+  font-family: inherit;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.projekte-search-result:last-child {
+  border-bottom: none;
+}
+
+.projekte-search-result:hover {
+  background: rgba(255, 47, 47, 0.15);
+  color: #ffffff;
+}
+
+.projekte-search-result strong {
+  display: block;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+}
+
+.projekte-search-empty {
+  padding: 0.7rem 1rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
 /* Info-Box links: Name + Beispieltext des gehoverten Stadtteils */
 .stadtteile-hover-info {
-  margin-top: calc(2rem + 2cm);
+  margin-top: 1rem;
   max-width: 420px;
 }
 
@@ -1531,13 +1701,170 @@ main {
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.65);
   transition: opacity 0.15s ease;
+  /* Feste Höhe für 2 Zeilen (die meisten Stadtteile haben 1-2 Adressen),
+     damit die Box darunter (.projekte-image-wrap) nicht springt; bei den
+     wenigen Stadtteilen mit 3 Adressen (Alsterdorf, HafenCity) verschiebt
+     sich die Box um eine Zeile - bewusster Kompromiss gegen zu viel
+     Leerraum im Normalfall */
+  min-height: calc(0.95rem * 1.7 * 2);
+}
+
+/* Projekt-Galerie unter der Stadtteil-Info, gleicher Look wie das Bild auf
+   der Leistungen-Seite (Rahmen-Verlauf, Schatten, abgerundete Ecken). Zeigt
+   die Bilder des aktuell gehoverten/ausgewählten Projekts; ohne zugeordnete
+   Bilder bleibt die Box sichtbar mit Platzhaltertext (.is-empty). */
+.projekte-image-wrap {
+  position: relative;
+  width: 420px;
+  height: 320px;
+  margin-top: 0.8rem;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 20, 20, 0.55);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.55),
+    0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+.projekte-image-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  padding: 1px;
+  background: linear-gradient(135deg,
+      rgba(199, 29, 29, 0.9),
+      rgba(255, 156, 156, 0.05) 30%,
+      rgba(235, 172, 172, 0.202) 70%,
+      rgba(255, 47, 47, 0.6));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.projekte-gallery-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.projekte-image-wrap.is-empty .projekte-gallery-image {
+  display: none;
+}
+
+.projekte-gallery-placeholder {
+  display: none;
+  padding: 0 2.2rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+.projekte-image-wrap.is-empty .projekte-gallery-placeholder {
+  display: block;
+}
+
+.projekte-image-fade {
+  animation: projekte-image-in 0.6s ease forwards;
+}
+
+@keyframes projekte-image-in {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Kleine Kreise zum Durchblättern der Projekt-Galerie, unten links in der Box */
+.projekte-gallery-dots {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.projekte-image-wrap.is-empty .projekte-gallery-dots {
+  display: none;
+}
+
+.projekte-gallery-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.25);
+  padding: 0;
+  cursor: pointer;
+}
+
+.projekte-gallery-dot:hover {
+  border-color: #ff2f2f;
+}
+
+.projekte-gallery-dot.active {
+  background: #ff2f2f;
+  border-color: #ff2f2f;
+}
+
+/* Pfeil unten rechts in der Box, gleicher Look wie der Mobile-Pfeil neben dem
+   Seitentitel – schaltet Projekt (und damit auch Stadtteil) weiter */
+.projekte-next-btn {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 47, 47, 0.5);
+  background: rgba(255, 47, 47, 0.12);
+  color: #ff2f2f;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.projekte-next-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.projekte-next-btn:hover {
+  background: rgba(255, 47, 47, 0.25);
+}
+
+.projekte-next-btn:active {
+  background: rgba(255, 47, 47, 0.4);
 }
 
 /* Geografischer Wirkungsbereich (Deutschland / Ausland), Linien im Stil der Kontakt-Seite */
 .projekte-scope {
   position: absolute;
   left: 1cm;
-  bottom: calc(4rem + 5cm);
+  bottom: calc(4rem + 2cm);
   max-width: 420px;
 }
 
@@ -1561,15 +1888,13 @@ main {
   position: relative;
   height: 1px;
   margin: 1.6rem 0;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.35) 22%,
-    #ff0033 40%,
-    #ff0033 60%,
-    rgba(255, 255, 255, 0.35) 78%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.35) 22%,
+      #ff0033 40%,
+      #ff0033 60%,
+      rgba(255, 255, 255, 0.35) 78%,
+      rgba(255, 255, 255, 0) 100%);
   border: none;
 }
 
@@ -1587,7 +1912,9 @@ main {
    angepasst.
    ========================================================= */
 @media (max-width: 600px) {
-  html, body {
+
+  html,
+  body {
     overflow: auto;
   }
 
@@ -1676,7 +2003,7 @@ main {
   }
 
   /* Home: mehr Abstand zwischen Gallery und Sozialen Medien */
-  .view[data-view="home"].active ~ .social-links {
+  .view[data-view="home"].active~.social-links {
     margin-top: 2.5rem;
   }
 
@@ -1740,11 +2067,25 @@ main {
     margin-bottom: 0.5cm;
   }
 
-  .gallery-cell-left { height: 256px; }
-  .gallery-cell-mid-top { height: 84px; }
-  .gallery-cell-mid-bottom { height: 136px; }
-  .gallery-cell-right-top { height: 132px; }
-  .gallery-cell-right-bottom { height: 112px; }
+  .gallery-cell-left {
+    height: 256px;
+  }
+
+  .gallery-cell-mid-top {
+    height: 84px;
+  }
+
+  .gallery-cell-mid-bottom {
+    height: 136px;
+  }
+
+  .gallery-cell-right-top {
+    height: 132px;
+  }
+
+  .gallery-cell-right-bottom {
+    height: 112px;
+  }
 
   /* Leistungen-Karussell: gleiches Verhalten (Fade oben/unten,
      rote Hervorhebung, 6s-Wechsel), nur kleiner und klar links
@@ -1858,8 +2199,15 @@ main {
   }
 
   @keyframes leistungen-image-in-mobile {
-    from { opacity: 0; transform: translateX(-24px); }
-    to { opacity: 1; transform: translateX(0); }
+    from {
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
   .leistungen-image-fade {
@@ -1908,17 +2256,28 @@ main {
     background: rgba(255, 47, 47, 0.3);
   }
 
-  .stadtteile-hover-info {
+  .projekte-search-wrap {
     order: 1;
+    width: 100%;
+    margin-top: 0.8rem;
+  }
+
+  .stadtteile-hover-info {
+    order: 2;
     margin-top: 0.5rem;
     max-width: 100%;
+  }
+
+  /* Nur Desktop-Feature, auf Mobile ausgeblendet */
+  .projekte-image-wrap {
+    display: none;
   }
 
   /* Karte so groß wie möglich, ohne Pan/Zoom – volle Breite bis an den
      Panel-Rand (bleedet über das seitliche Panel-Padding hinaus), Höhe
      folgt automatisch dem Seitenverhältnis, kein Scrollen/Überlauf */
   .stadtteile-map-wrap {
-    order: 2;
+    order: 3;
     position: static;
     top: auto;
     left: auto;
@@ -1936,7 +2295,7 @@ main {
   }
 
   .projekte-scope {
-    order: 3;
+    order: 4;
     position: static;
     left: auto;
     bottom: auto;

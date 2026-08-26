@@ -40,35 +40,153 @@ if (stadtteileMapWrap) {
     .then((res) => res.text())
     .then((svgText) => {
       stadtteileMapWrap.innerHTML = svgText;
+      buildStadtteilNames();
     })
     .catch(() => {
       stadtteileMapWrap.textContent = 'Karte konnte nicht geladen werden.';
     });
 
-  // Feste Adressen pro Stadtteil – hier weitere Projekte eintragen
-  // (Schlüssel = path-id aus images/hamburg-stadtteile.svg, Schema: stadtteil-<name-slug>;
-  // ein Stadtteil kann mehrere Projekt-Adressen haben)
-  const stadtteilAddresses = {
-    'stadtteil-langenhorn': ['Langenhorner Chaussee, 22419 Hamburg'],
-    'stadtteil-rahlstedt': ['Soldkampweg, 22145 Hamburg', 'Nydamer Weg, 22145 Hamburg'],
-    'stadtteil-eilbek': ['Landwehr, 22087 Hamburg'],
-    'stadtteil-barmbek-nord': ['Fühlsbüttler Straße, 22305 Hamburg', 'Drosselstraße, 22305 Hamburg'],
-    'stadtteil-gro-borstel': ['Obenhauptstraße, 22335 Hamburg'],
-    'stadtteil-wellingsb-ttel': ['Eckerkamp, 22391 Hamburg'],
-    'stadtteil-billstedt': ['Möllner Landstraße, 22111 Hamburg'],
-    'stadtteil-harvestehude': ['Rothenbaumchaussee, 20149 Hamburg', 'Hallerstraße, 20146 Hamburg'],
-    'stadtteil-eppendorf': ['Münsterstraße, 22529 Hamburg', 'Eppendorfer Landstraße, 20249 Hamburg'],
-    'stadtteil-alsterdorf': [
-      'Brabandstraße, 22297 Hamburg',
-      'Alsterdorfer Straße, 22297 Hamburg',
-      'Rathenaustraße, 22297 Hamburg',
-    ],
-    'stadtteil-hafencity': ['Sandtorkai, 20457 Hamburg', 'Brooktorkai, 20457 Hamburg', 'Am Kaiserkai, 20457 Hamburg'],
-    'stadtteil-lokstedt': ['Lembekstraße, 22529 Hamburg'],
-    'stadtteil-eimsb-ttel': ['Heußweg, 20255 Hamburg', 'Kleiner Schäferkamp, 20357 Hamburg'],
-    'stadtteil-volksdorf': ['Claus-Ferck-Straße, 22359 Hamburg'],
-    'stadtteil-dulsberg': ['Eulenkamp, 22049 Hamburg'],
-  };
+  // Ein Eintrag pro einzelnem Projekt (ein Stadtteil kann mehrere haben).
+  // "stadtteil" = path-id aus images/hamburg-stadtteile.svg.
+  // "images" = Dateinamen aus dem Ordner "projects/" (Reihenfolge = Album-
+  // Reihenfolge) – hier eintragen, sobald die Bilder zugeordnet sind.
+  const projects = [
+    {
+      stadtteil: 'stadtteil-langenhorn',
+      address: 'Langenhorner Chaussee, 22419 Hamburg',
+      images: ['langenhorn-01.jpeg', 'langenhorn-02.jpeg', 'langenhorn-03.jpeg', 'langenhorn-04.jpeg'],
+    },
+    { stadtteil: 'stadtteil-rahlstedt', address: 'Soldkampweg, 22145 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-rahlstedt', address: 'Nydamer Weg, 22145 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-eilbek', address: 'Landwehr, 22087 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-barmbek-nord', address: 'Fühlsbüttler Straße, 22305 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-barmbek-nord', address: 'Drosselstraße, 22305 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-gro-borstel', address: 'Obenhauptstraße, 22335 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-wellingsb-ttel', address: 'Eckerkamp, 22391 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-billstedt', address: 'Möllner Landstraße, 22111 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-harvestehude', address: 'Rothenbaumchaussee, 20149 Hamburg', images: [] },
+    {
+      stadtteil: 'stadtteil-harvestehude',
+      address: 'Hallerstraße, 20146 Hamburg',
+      images: [
+        'hallerstrasse-01.jpeg',
+        'hallerstrasse-02.jpeg',
+        'hallerstrasse-03.jpeg',
+        'hallerstrasse-04.jpeg',
+        'hallerstrasse-05.jpeg',
+        'hallerstrasse-06.jpeg',
+        'hallerstrasse-07.jpeg',
+        'hallerstrasse-08.jpeg',
+        'hallerstrasse-09.jpeg',
+      ],
+    },
+    { stadtteil: 'stadtteil-eppendorf', address: 'Münsterstraße, 22529 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-eppendorf', address: 'Eppendorfer Landstraße, 20249 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-alsterdorf', address: 'Brabandstraße, 22297 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-alsterdorf', address: 'Alsterdorfer Straße, 22297 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-alsterdorf', address: 'Rathenaustraße, 22297 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-hafencity', address: 'Sandtorkai, 20457 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-hafencity', address: 'Brooktorkai, 20457 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-hafencity', address: 'Am Kaiserkai, 20457 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-lokstedt', address: 'Lembekstraße, 22529 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-eimsb-ttel', address: 'Heußweg, 20255 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-eimsb-ttel', address: 'Kleiner Schäferkamp, 20357 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-volksdorf', address: 'Claus-Ferck-Straße, 22359 Hamburg', images: [] },
+    { stadtteil: 'stadtteil-dulsberg', address: 'Eulenkamp, 22049 Hamburg', images: [] },
+  ];
+
+  // Adressliste pro Stadtteil (für die Info-Box), aus "projects" abgeleitet,
+  // damit die Adressen nur an einer Stelle (oben) gepflegt werden müssen
+  const stadtteilAddresses = projects.reduce((acc, project) => {
+    (acc[project.stadtteil] = acc[project.stadtteil] || []).push(project.address);
+    return acc;
+  }, {});
+
+  // Name pro Stadtteil (für die Suche) – wird erst befüllt, sobald die SVG
+  // geladen ist, da die Namen aus deren data-name-Attributen kommen
+  let stadtteilNames = {};
+
+  function buildStadtteilNames() {
+    stadtteilNames = {};
+    stadtteileMapWrap.querySelectorAll('path[id]').forEach((path) => {
+      stadtteilNames[path.id] = path.dataset.name || path.id;
+    });
+  }
+
+  // Bild-Galerie unter der Stadtteil-Info: zeigt die Bilder des aktuell
+  // gehoverten/ausgewählten Projekts, mit Punkten zum Durchblättern und
+  // einem Pfeil (unten rechts) zum nächsten Projekt. Ohne zugeordnete Bilder
+  // bleibt die Box sichtbar mit Platzhaltertext.
+  const projekteImageWrap = document.getElementById('projekte-image-wrap');
+  const projekteGalleryImage = document.getElementById('projekte-gallery-image');
+  const projekteGalleryDots = document.getElementById('projekte-gallery-dots');
+  const projekteNextBtn = document.getElementById('projekte-next-btn');
+
+  let currentProjectIndex = -1;
+  let currentImageIndex = 0;
+  // Dauerhaft ausgewähltes Projekt (Klick/Pfeil) – bleibt bestehen, auch
+  // wenn die Maus danach über einen anderen Stadtteil bewegt wird
+  let selectedProjectIndex = -1;
+
+  // Bevorzugt ein Projekt MIT Bildern, falls der Stadtteil mehrere Projekte
+  // hat (z. B. Harvestehude: Rothenbaumchaussee ohne Bilder, Hallerstraße
+  // mit Bildern) – sonst wäre beim Klick nie etwas in der Galerie zu sehen.
+  function findFirstProjectIndexForStadtteil(stadtteilId) {
+    const withImages = projects.findIndex(
+      (project) => project.stadtteil === stadtteilId && project.images.length
+    );
+    if (withImages !== -1) return withImages;
+
+    return projects.findIndex((project) => project.stadtteil === stadtteilId);
+  }
+
+  function showGalleryImage(index) {
+    const project = projects[currentProjectIndex];
+    if (!project || !project.images.length || !projekteGalleryImage) return;
+
+    currentImageIndex = ((index % project.images.length) + project.images.length) % project.images.length;
+
+    const src = `projects/${project.images[currentImageIndex]}`;
+    if (projekteGalleryImage.getAttribute('src') !== src) {
+      projekteGalleryImage.setAttribute('src', src);
+      projekteGalleryImage.classList.remove('projekte-image-fade');
+      void projekteGalleryImage.offsetWidth;
+      projekteGalleryImage.classList.add('projekte-image-fade');
+    }
+
+    if (projekteGalleryDots) {
+      projekteGalleryDots.querySelectorAll('.projekte-gallery-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentImageIndex);
+      });
+    }
+  }
+
+  function renderCurrentProject() {
+    if (!projekteImageWrap) return;
+
+    const project = projects[currentProjectIndex];
+    if (!project || !project.images.length) {
+      projekteImageWrap.classList.add('is-empty');
+      if (projekteGalleryDots) projekteGalleryDots.innerHTML = '';
+      return;
+    }
+
+    projekteImageWrap.classList.remove('is-empty');
+
+    if (projekteGalleryDots) {
+      projekteGalleryDots.innerHTML = '';
+      project.images.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'projekte-gallery-dot';
+        dot.setAttribute('aria-label', `Bild ${i + 1}`);
+        dot.addEventListener('click', () => showGalleryImage(i));
+        projekteGalleryDots.appendChild(dot);
+      });
+    }
+
+    showGalleryImage(0);
+  }
 
   // Grenzen benachbarter Stadtteile überlappen sich teils minimal (jeder
   // Stadtteil wurde beim SVG-Export einzeln vereinfacht/entrundet), dadurch
@@ -105,36 +223,74 @@ if (stadtteileMapWrap) {
     } else {
       stadtteileHoverText.textContent = `Aktuelle und abgeschlossene Bauprojekte in ${name}.`;
     }
+
+    // Auch leeren, wenn der Stadtteil kein Projekt hat – sonst blieben die
+    // Bilder des vorher ausgewählten Stadtteils fälschlich sichtbar
+    currentProjectIndex = findFirstProjectIndexForStadtteil(path.id);
+    renderCurrentProject();
+  }
+
+  // Zeigt Name/Adresse/Galerie exakt für diesen Projekt-Index an (ohne die
+  // "mit Bildern bevorzugen"-Auswahl von showStadtteilInfo) – genutzt, um
+  // nach dem Weghovern zur zuletzt ausgewählten Ansicht zurückzukehren.
+  function renderProjectByIndex(index) {
+    const project = projects[index];
+    if (!project || !stadtteileHoverName || !stadtteileHoverText) return;
+
+    const path = stadtteileMapWrap.querySelector(`#${project.stadtteil}`);
+    stadtteileHoverName.textContent = path ? path.dataset.name : project.stadtteil;
+
+    const addresses = stadtteilAddresses[project.stadtteil];
+    stadtteileHoverText.innerHTML = addresses && addresses.length
+      ? addresses.join('<br>')
+      : project.address;
+
+    currentProjectIndex = index;
+    renderCurrentProject();
   }
 
   // Einzige Stelle, die den dauerhaften roten "ausgewählt"-Zustand setzt –
   // egal ob per Kartentipp oder Pfeil-Button ausgewählt wurde, es darf immer
   // nur ein Stadtteil gleichzeitig markiert sein, daher hier zentral zuerst
   // alle vorherigen Markierungen entfernen.
-  function selectStadtteilPath(path) {
+  function highlightStadtteilPath(path) {
     if (!path) return;
 
     stadtteileMapWrap.querySelectorAll('path.stadtteile-selected').forEach((p) => {
       p.classList.remove('stadtteile-selected');
     });
     path.classList.add('stadtteile-selected');
+  }
 
-    const paths = stadtteileMapWrap.querySelectorAll('path');
-    stadtteileNextIndex = Array.prototype.indexOf.call(paths, path);
+  function selectStadtteilPath(path) {
+    if (!path) return;
 
+    highlightStadtteilPath(path);
     showStadtteilInfo(path);
+    selectedProjectIndex = currentProjectIndex;
   }
 
   stadtteileMapWrap.addEventListener('mouseover', (e) => {
     showStadtteilInfo(e.target.closest('path'));
   });
 
+  // Beim Verlassen eines Stadtteils zur dauerhaft ausgewählten Ansicht
+  // zurückkehren (falls vorhanden), statt die Galerie/Info zu leeren –
+  // sonst verschwinden die Bilder eines ausgewählten Projekts, sobald die
+  // Maus sich bewegt.
   stadtteileMapWrap.addEventListener('mouseout', (e) => {
     const path = e.target.closest('path');
     if (!path || !stadtteileHoverName || !stadtteileHoverText) return;
 
+    if (selectedProjectIndex !== -1) {
+      renderProjectByIndex(selectedProjectIndex);
+      return;
+    }
+
     stadtteileHoverName.textContent = stadtteileDefaultName;
     stadtteileHoverText.textContent = stadtteileDefaultText;
+    currentProjectIndex = -1;
+    renderCurrentProject();
   });
 
   // Touch-Geräte: "mouseover" feuert dort unzuverlässig (mal gar nicht, mal
@@ -177,18 +333,126 @@ if (stadtteileMapWrap) {
     selectStadtteilPath(pickSmallestPathAtPoint(touch.clientX, touch.clientY));
   }, { passive: true });
 
-  // Pfeil neben dem Seiten-Titel (Mobile): schaltet Stadtteil für Stadtteil
-  // durch, ohne dass exakt auf die Karte getippt werden muss
+  // Pfeil neben dem Seiten-Titel (Mobile) und Pfeil unten rechts in der
+  // Bild-Box (Desktop): schalten beide gemeinsam Projekt für Projekt durch
+  // (ein Stadtteil kann mehrere Projekte haben), ohne dass exakt auf die
+  // Karte getippt/geklickt werden muss.
   const stadtteileNextBtn = document.getElementById('stadtteile-next-btn');
-  let stadtteileNextIndex = -1;
+
+  function goToNextProject() {
+    if (!projects.length) return;
+
+    const nextIndex = (selectedProjectIndex + 1 + projects.length) % projects.length;
+    const nextProject = projects[nextIndex];
+    const path = stadtteileMapWrap.querySelector(`#${nextProject.stadtteil}`);
+    highlightStadtteilPath(path);
+
+    renderProjectByIndex(nextIndex);
+    selectedProjectIndex = nextIndex;
+  }
 
   if (stadtteileNextBtn) {
-    stadtteileNextBtn.addEventListener('click', () => {
-      const paths = stadtteileMapWrap.querySelectorAll('path');
-      if (!paths.length) return;
+    stadtteileNextBtn.addEventListener('click', goToNextProject);
+  }
 
-      const nextIndex = (stadtteileNextIndex + 1) % paths.length;
-      selectStadtteilPath(paths[nextIndex]);
+  if (projekteNextBtn) {
+    projekteNextBtn.addEventListener('click', goToNextProject);
+  }
+
+  // Suchleiste: Stadtteil, Straße, Postleitzahl oder ganzes Projekt suchen.
+  // Ein Treffer wählt das Projekt genauso aus wie ein Kartenklick (Highlight
+  // auf der Karte + Info-Box + Galerie).
+  const projekteSearchInput = document.getElementById('projekte-search-input');
+  const projekteSearchResults = document.getElementById('projekte-search-results');
+  const projekteSearchIconBtn = document.getElementById('projekte-search-icon-btn');
+
+  function selectProjectByIndex(index) {
+    const project = projects[index];
+    if (!project) return;
+
+    const path = stadtteileMapWrap.querySelector(`#${project.stadtteil}`);
+    highlightStadtteilPath(path);
+    renderProjectByIndex(index);
+    selectedProjectIndex = index;
+  }
+
+  function renderSearchResults(query) {
+    if (!projekteSearchResults) return;
+
+    const term = query.trim().toLowerCase();
+    if (!term) {
+      projekteSearchResults.classList.remove('visible');
+      projekteSearchResults.innerHTML = '';
+      return;
+    }
+
+    const matchedStadtteile = [];
+    projects.forEach((project) => {
+      const name = stadtteilNames[project.stadtteil] || '';
+      const haystack = `${name} ${project.address}`.toLowerCase();
+      if (haystack.includes(term) && !matchedStadtteile.includes(project.stadtteil)) {
+        matchedStadtteile.push(project.stadtteil);
+      }
+    });
+
+    projekteSearchResults.innerHTML = '';
+
+    if (!matchedStadtteile.length) {
+      const empty = document.createElement('p');
+      empty.className = 'projekte-search-empty';
+      empty.textContent = 'Keine Treffer.';
+      projekteSearchResults.appendChild(empty);
+      projekteSearchResults.classList.add('visible');
+      return;
+    }
+
+    // Ein Ergebnis pro Stadtteil (auch wenn er mehrere Projekte hat) – beim
+    // Klick wird wie beim Kartenklick bevorzugt das Projekt MIT Bildern
+    // gewählt, sonst bliebe die Galerie leer, obwohl der Stadtteil Bilder hat.
+    matchedStadtteile.slice(0, 8).forEach((stadtteilId) => {
+      const index = findFirstProjectIndexForStadtteil(stadtteilId);
+      const name = stadtteilNames[stadtteilId] || stadtteilId;
+      const addresses = (stadtteilAddresses[stadtteilId] || []).join(' · ');
+
+      const result = document.createElement('button');
+      result.type = 'button';
+      result.className = 'projekte-search-result';
+      result.innerHTML = `<strong>${name}</strong>${addresses}`;
+      result.addEventListener('click', () => {
+        selectProjectByIndex(index);
+        projekteSearchInput.value = '';
+        projekteSearchResults.classList.remove('visible');
+        projekteSearchResults.innerHTML = '';
+        projekteSearchInput.blur();
+      });
+      projekteSearchResults.appendChild(result);
+    });
+
+    projekteSearchResults.classList.add('visible');
+  }
+
+  if (projekteSearchInput) {
+    projekteSearchInput.addEventListener('input', () => {
+      renderSearchResults(projekteSearchInput.value);
+    });
+
+    projekteSearchInput.addEventListener('focus', () => {
+      if (projekteSearchInput.value.trim()) {
+        renderSearchResults(projekteSearchInput.value);
+      }
+    });
+
+    if (projekteSearchIconBtn) {
+      projekteSearchIconBtn.addEventListener('click', () => {
+        projekteSearchInput.focus();
+        renderSearchResults(projekteSearchInput.value);
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.projekte-search-wrap')) {
+        projekteSearchResults.classList.remove('visible');
+      }
     });
   }
 }
