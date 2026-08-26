@@ -455,6 +455,241 @@ if (stadtteileMapWrap) {
       }
     });
   }
+
+  // "Projekte deutschlandweit" / "Projekte im Ausland": Pfeil neben der
+  // Überschrift öffnet ein Panel an Stelle der Hamburg-Karte mit Bildern +
+  // Adressliste. Noch keine Adressen/Bilder hinterlegt - hier eintragen,
+  // sobald sie feststehen (Bilder aus dem Ordner "projects/").
+  const regionProjects = {
+    deutschlandweit: [],
+    ausland: [
+      {
+        address: 'Monte Carlo, 98000 Monaco',
+        images: ['montecarlo-01.jpg', 'montecarlo-02.jpg', 'montecarlo-03.jpg', 'montecarlo-04.jpg'],
+      },
+      {
+        address: 'Paris, 75016 Frankreich',
+        images: ['paris-01.jpg', 'paris-02.jpg', 'paris-03.jpg'],
+      },
+    ],
+  };
+
+  const regionTitles = {
+    deutschlandweit: 'Projekte deutschlandweit',
+    ausland: 'Projekte im Ausland',
+  };
+
+  const projekteRegionPanel = document.getElementById('projekte-region-panel');
+  const projekteRegionBack = document.getElementById('projekte-region-back');
+  const projekteRegionTitle = document.getElementById('projekte-region-title');
+  const projekteRegionGalleryWrap = document.getElementById('projekte-region-gallery-wrap');
+  const projekteRegionGalleryImage = document.getElementById('projekte-region-gallery-image');
+  const projekteRegionGalleryDots = document.getElementById('projekte-region-gallery-dots');
+  const projekteRegionAddressList = document.getElementById('projekte-region-address-list');
+  const projekteScopeArrowDe = document.getElementById('projekte-scope-arrow-de');
+  const projekteScopeArrowInt = document.getElementById('projekte-scope-arrow-int');
+
+  let currentRegionEntries = [];
+  let regionImages = [];
+  let regionImageIndex = 0;
+  let regionAutoAdvanceTimer = null;
+  const REGION_AUTO_ADVANCE_MS = 6000;
+
+  // Nur ein einziges Pfeil-Icon insgesamt - es wandert zur jeweils
+  // ausgewählten Anschrift, statt dass jede Zeile ein eigenes Icon hat.
+  const projekteRegionSelectedIcon = document.createElement('span');
+  projekteRegionSelectedIcon.className = 'projekte-region-address-icon';
+  projekteRegionSelectedIcon.innerHTML =
+    '<svg viewBox="0 0 80.593 122.88" fill="currentColor"><polygon points="0,0 30.82,0 80.593,61.44 30.82,122.88 0,122.88 49.772,61.44 0,0"/></svg>';
+
+  // FLIP-Technik: Position vor dem Verschieben merken, danach die Distanz
+  // zur neuen Position per Transform "rückgängig" machen und weich auf 0
+  // animieren - so gleitet das Icon zur neuen Anschrift, statt dorthin zu
+  // springen.
+  function moveSelectedIconTo(newParent) {
+    const icon = projekteRegionSelectedIcon;
+    const wasInDocument = icon.isConnected;
+    const firstRect = wasInDocument ? icon.getBoundingClientRect() : null;
+
+    icon.style.transition = 'none';
+    newParent.prepend(icon);
+
+    if (!wasInDocument) return;
+
+    const lastRect = icon.getBoundingClientRect();
+    const deltaX = firstRect.left - lastRect.left;
+    const deltaY = firstRect.top - lastRect.top;
+
+    if (!deltaX && !deltaY) return;
+
+    icon.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+    requestAnimationFrame(() => {
+      icon.style.transition = 'transform 0.35s ease';
+      icon.style.transform = '';
+    });
+  }
+
+  // Klasse ab-/wieder anhängen, damit die CSS-Animation bei jedem Aufruf
+  // neu abspielt (sonst würde sie beim zweiten Mal nicht erneut auslösen)
+  function retriggerAnimation(el, className) {
+    if (!el) return;
+    el.classList.remove(className);
+    void el.offsetWidth;
+    el.classList.add(className);
+  }
+
+  function stopRegionAutoAdvance() {
+    if (regionAutoAdvanceTimer) {
+      clearInterval(regionAutoAdvanceTimer);
+      regionAutoAdvanceTimer = null;
+    }
+  }
+
+  // Läuft, solange ein Projekt mit mehr als einem Bild ausgewählt ist -
+  // wechselt automatisch alle 6s weiter; jeder manuelle Wechsel (Kreis-Klick)
+  // startet die 6s erneut, damit das gerade gewählte Bild nicht sofort
+  // wieder verschwindet.
+  function startRegionAutoAdvance() {
+    stopRegionAutoAdvance();
+    if (regionImages.length <= 1) return;
+
+    regionAutoAdvanceTimer = setInterval(() => {
+      showRegionImage(regionImageIndex + 1);
+    }, REGION_AUTO_ADVANCE_MS);
+  }
+
+  function showRegionImage(index) {
+    if (!projekteRegionGalleryImage || !regionImages.length) return;
+
+    regionImageIndex = ((index % regionImages.length) + regionImages.length) % regionImages.length;
+    const src = `projects/${regionImages[regionImageIndex]}`;
+    if (projekteRegionGalleryImage.getAttribute('src') !== src) {
+      projekteRegionGalleryImage.setAttribute('src', src);
+      retriggerAnimation(projekteRegionGalleryImage, 'projekte-region-image-fade');
+    }
+
+    if (projekteRegionGalleryDots) {
+      projekteRegionGalleryDots.querySelectorAll('button').forEach((dot, i) => {
+        dot.classList.toggle('active', i === regionImageIndex);
+      });
+    }
+
+    startRegionAutoAdvance();
+  }
+
+  // Anschrift angeklickt: zeigt die Bilder genau dieses Projekts in der
+  // Galerie, mit eigenen Kreisen + Auto-Wechsel; das einzige Pfeil-Icon
+  // springt vor die neu gewählte Anschrift.
+  function selectRegionProject(index) {
+    const entry = currentRegionEntries[index];
+    regionImages = entry ? entry.images : [];
+    regionImageIndex = 0;
+
+    if (projekteRegionAddressList) {
+      const rows = projekteRegionAddressList.querySelectorAll('li');
+      rows.forEach((li, i) => {
+        li.classList.toggle('active', i === index);
+      });
+
+      const activeRow = rows[index];
+      if (activeRow) {
+        moveSelectedIconTo(activeRow);
+      }
+    }
+
+    if (projekteRegionGalleryWrap) {
+      projekteRegionGalleryWrap.classList.toggle('is-empty', !regionImages.length);
+    }
+
+    if (projekteRegionGalleryDots) {
+      projekteRegionGalleryDots.innerHTML = '';
+      regionImages.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', `Bild ${i + 1}`);
+        dot.addEventListener('click', () => showRegionImage(i));
+        projekteRegionGalleryDots.appendChild(dot);
+      });
+    }
+
+    showRegionImage(0);
+  }
+
+  function openRegionPanel(regionKey) {
+    if (!projekteRegionPanel) return;
+
+    const entries = regionProjects[regionKey] || [];
+    currentRegionEntries = entries;
+
+    if (projekteRegionTitle) {
+      projekteRegionTitle.textContent = regionTitles[regionKey] || '';
+    }
+
+    if (projekteRegionAddressList) {
+      projekteRegionAddressList.innerHTML = '';
+      if (!entries.length) {
+        const li = document.createElement('li');
+        li.className = 'projekte-region-address-empty';
+        li.textContent = 'Adressen folgen in Kürze.';
+        projekteRegionAddressList.appendChild(li);
+      } else {
+        entries.forEach((entry, i) => {
+          const li = document.createElement('li');
+
+          const text = document.createElement('span');
+          text.className = 'projekte-region-address-text';
+          // Adresse zeilenweise aufteilen (z. B. "Monte Carlo" / "98000 Monaco"),
+          // statt alles in einer langen Zeile zu zeigen
+          text.innerHTML = entry.address
+            .split(',')
+            .map((line) => line.trim())
+            .join('<br>');
+
+          li.setAttribute('role', 'button');
+          li.setAttribute('tabindex', '0');
+          li.setAttribute('aria-label', `Bilder zu ${entry.address} anzeigen`);
+          li.addEventListener('click', () => selectRegionProject(i));
+          li.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectRegionProject(i);
+            }
+          });
+
+          li.appendChild(text);
+          projekteRegionAddressList.appendChild(li);
+        });
+      }
+    }
+
+    selectRegionProject(entries.length ? 0 : -1);
+
+    retriggerAnimation(projekteRegionTitle, 'projekte-region-content-fade');
+    retriggerAnimation(projekteRegionAddressList, 'projekte-region-content-fade');
+    retriggerAnimation(projekteRegionGalleryWrap, 'projekte-region-content-fade');
+
+    stadtteileMapWrap.classList.add('is-hidden');
+    projekteRegionPanel.classList.add('visible');
+  }
+
+  function closeRegionPanel() {
+    if (!projekteRegionPanel) return;
+    projekteRegionPanel.classList.remove('visible');
+    stadtteileMapWrap.classList.remove('is-hidden');
+    stopRegionAutoAdvance();
+  }
+
+  if (projekteScopeArrowDe) {
+    projekteScopeArrowDe.addEventListener('click', () => openRegionPanel('deutschlandweit'));
+  }
+
+  if (projekteScopeArrowInt) {
+    projekteScopeArrowInt.addEventListener('click', () => openRegionPanel('ausland'));
+  }
+
+  if (projekteRegionBack) {
+    projekteRegionBack.addEventListener('click', closeRegionPanel);
+  }
 }
 
 // Wetter-Widget – Open-Meteo (kostenlos, kein API-Key nötig)

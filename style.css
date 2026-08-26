@@ -1511,6 +1511,258 @@ main {
   transform: translateY(-50%);
 }
 
+/* Panel "Projekte deutschlandweit"/"im Ausland": nimmt beim Öffnen genau
+   die Fläche der Hamburg-Karte ein (gleiche Position/Breite), die Karte
+   wird währenddessen ausgeblendet (.stadtteile-map-wrap.is-hidden) */
+.projekte-region-panel {
+  position: absolute;
+  top: 50%;
+  left: 500px;
+  width: 1020px;
+  height: 780px;
+  transform: translateY(-50%);
+  padding: 2.2rem 2.4rem;
+  border-radius: 10px;
+  background: rgba(20, 20, 20, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.55),
+    0 8px 20px rgba(0, 0, 0, 0.45);
+  /* Statt display:none/block ein-/ausblenden, damit ein weicher Übergang
+     möglich ist (gleiche Technik wie .view/.view.active) */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.projekte-region-panel.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.stadtteile-map-wrap.is-hidden {
+  display: none;
+}
+
+.projekte-region-back {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.2rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.projekte-region-back:hover {
+  color: #ff2f2f;
+}
+
+.projekte-region-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 1.4rem;
+}
+
+.projekte-region-body {
+  display: flex;
+  gap: 2rem;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+}
+
+.projekte-region-gallery-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 20, 20, 0.55);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.55),
+    0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+.projekte-region-gallery-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(199, 29, 29, 0.9),
+    rgba(255, 156, 156, 0.05) 30%,
+    rgba(235, 172, 172, 0.202) 70%,
+    rgba(255, 47, 47, 0.6)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.projekte-region-gallery-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.projekte-region-image-fade {
+  animation: projekte-region-fade-in 0.5s ease;
+}
+
+/* Beim Öffnen/Wechseln von "deutschlandweit"/"Ausland" blenden Titel und
+   Inhalte weich ein, statt abrupt zu wechseln */
+.projekte-region-content-fade {
+  animation: projekte-region-fade-in 0.45s ease;
+}
+
+@keyframes projekte-region-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.projekte-region-gallery-wrap.is-empty .projekte-region-gallery-image {
+  display: none;
+}
+
+.projekte-region-gallery-placeholder {
+  display: none;
+  padding: 0 2rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+.projekte-region-gallery-wrap.is-empty .projekte-region-gallery-placeholder {
+  display: block;
+}
+
+.projekte-region-gallery-dots {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.projekte-region-gallery-wrap.is-empty .projekte-region-gallery-dots {
+  display: none;
+}
+
+.projekte-region-gallery-wrap .projekte-region-gallery-dots button {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.25);
+  padding: 0;
+  cursor: pointer;
+}
+
+.projekte-region-gallery-wrap .projekte-region-gallery-dots button:hover {
+  border-color: #ff2f2f;
+}
+
+.projekte-region-gallery-wrap .projekte-region-gallery-dots button.active {
+  background: #ff2f2f;
+  border-color: #ff2f2f;
+}
+
+.projekte-region-address-list {
+  flex: 0 0 300px;
+  list-style: none;
+  overflow-y: auto;
+}
+
+/* Die ganze Zeile ist jetzt klickbar (kein separater Kreis-Pfeil mehr) -
+   Icon oben an der ersten Zeile der (ggf. zweizeiligen) Anschrift, nicht
+   mittig über beide Zeilen */
+.projekte-region-address-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-bottom: 0.9rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+}
+
+/* Kleines Pfeil-Icon ohne Kreis/Rahmen: weiß in Ruhe, weich-rot beim Hover,
+   volles Rot bei Auswahl (bleibt so, auch ohne Hover) */
+.projekte-region-address-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 10px;
+  /* an der Mitte der ersten Textzeile ausrichten */
+  margin-top: 0.5em;
+  color: #ffffff;
+  transition: color 0.15s ease;
+}
+
+.projekte-region-address-icon svg {
+  width: 10px;
+  height: 15px;
+}
+
+.projekte-region-address-list li:hover .projekte-region-address-icon {
+  color: #ff5c5c;
+}
+
+.projekte-region-address-list li.active .projekte-region-address-icon {
+  color: #ff5c5c;
+}
+
+.projekte-region-address-text {
+  flex: 1;
+  min-width: 0;
+  transition: color 0.15s ease;
+}
+
+/* Weiß in Ruhe, beim Hovern nur weich rot (bleibt gut lesbar) */
+.projekte-region-address-list li:hover .projekte-region-address-text {
+  color: rgba(255, 140, 140, 0.95);
+}
+
+/* Bei Auswahl rot, unabhängig vom Hover-Zustand (daher nach der Hover-Regel
+   definiert, damit es auch beim Hovern rot/nicht rosa bleibt) - etwas heller
+   als das Website-Rot, damit der Text gut lesbar bleibt */
+.projekte-region-address-list li.active .projekte-region-address-text {
+  color: #ff5c5c;
+}
+
+.projekte-region-address-empty {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .stadtteile-map-wrap svg {
   display: block;
   width: 100%;
@@ -1564,18 +1816,30 @@ main {
   -webkit-backdrop-filter: blur(18px);
 }
 
+/* Registriert den Winkel als animierbaren Typ, sonst könnte die Animation
+   den Wert nur abrupt springen statt weich drehen lassen (Browser ohne
+   @property-Support zeigen einfach einen ruhig stehenden Verlauf) */
+@property --projekte-search-border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
 .projekte-search-box::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: 999px;
   padding: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(199, 29, 29, 0.9),
-    rgba(255, 156, 156, 0.05) 30%,
-    rgba(235, 172, 172, 0.202) 70%,
-    rgba(255, 47, 47, 0.6)
+  /* Conic-Gradient statt linear, damit der Verlauf beim Drehen nahtlos
+     rundläuft; Start- und Endfarbe sind identisch, damit die Nahtstelle
+     beim vollen Umlauf unsichtbar bleibt */
+  background: conic-gradient(
+    from var(--projekte-search-border-angle),
+    rgba(255, 47, 47, 0.9),
+    rgba(255, 156, 156, 0.05) 35%,
+    rgba(235, 172, 172, 0.202) 65%,
+    rgba(255, 47, 47, 0.9) 100%
   );
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
@@ -1586,6 +1850,13 @@ main {
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
+  animation: projekte-search-border-spin 5s linear infinite;
+}
+
+@keyframes projekte-search-border-spin {
+  to {
+    --projekte-search-border-angle: 360deg;
+  }
 }
 
 /* Lupe rechts in der Suchleiste, klickbar (startet die Suche/öffnet die
@@ -1868,18 +2139,50 @@ main {
   max-width: 420px;
 }
 
+.projekte-scope-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
 .projekte-scope-item h3 {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.92);
-  margin-bottom: 0.5rem;
 }
 
 .projekte-scope-item p {
   font-size: 0.88rem;
   line-height: 1.65;
   color: rgba(255, 255, 255, 0.62);
+}
+
+/* Pfeil neben "Projekte deutschlandweit"/"im Ausland", gleicher Look wie
+   die anderen roten Pfeil-Buttons der Seite - öffnet das Bilder-Panel */
+.projekte-scope-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  /* Rechtsbündig 1rem von der Kante einrücken, exakt wie der Pfeil in der
+     Bild-Box (right: 1rem) - damit beide Pfeil-Spalten senkrecht auf einer
+     Linie liegen */
+  margin-right: 1rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 47, 47, 0.5);
+  background: rgba(255, 47, 47, 0.12);
+  color: #ff2f2f;
+  padding: 0;
+  cursor: pointer;
+}
+
+.projekte-scope-arrow:hover {
+  background: rgba(255, 47, 47, 0.25);
 }
 
 
@@ -2292,6 +2595,41 @@ main {
   .stadtteile-map-wrap svg {
     width: 100%;
     max-width: none;
+  }
+
+  .projekte-region-panel {
+    order: 3;
+    position: static;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+    transform: none;
+    margin: 1rem 0 0;
+    padding: 1.4rem 1.2rem;
+    /* Auf Mobile im normalen Textfluss (kein position:absolute) - ohne
+       display:none würde die unsichtbare Box trotzdem eine Lücke lassen */
+    display: none;
+    opacity: 1;
+  }
+
+  .projekte-region-panel.visible {
+    display: flex;
+  }
+
+  .projekte-region-body {
+    flex-direction: column;
+  }
+
+  .projekte-region-address-list {
+    flex: 0 0 auto;
+  }
+
+  .projekte-region-gallery-wrap {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 100%;
+    height: 280px;
   }
 
   .projekte-scope {
