@@ -128,6 +128,30 @@ if (stadtteileMapWrap) {
   // wenn die Maus danach über einen anderen Stadtteil bewegt wird
   let selectedProjectIndex = -1;
 
+  // Mobile: läuft nur, solange die Galerie aufgeklappt ist (.is-expanded) -
+  // wechselt automatisch alle 6s weiter, jeder manuelle Wechsel (Wisch/Punkt)
+  // startet die 6s erneut
+  let projekteAutoAdvanceTimer = null;
+  const PROJEKTE_AUTO_ADVANCE_MS = 6000;
+
+  function stopProjekteAutoAdvance() {
+    if (projekteAutoAdvanceTimer) {
+      clearInterval(projekteAutoAdvanceTimer);
+      projekteAutoAdvanceTimer = null;
+    }
+  }
+
+  function startProjekteAutoAdvance() {
+    stopProjekteAutoAdvance();
+    const project = projects[currentProjectIndex];
+    if (!projekteImageWrap || !projekteImageWrap.classList.contains('is-expanded')) return;
+    if (!project || project.images.length <= 1) return;
+
+    projekteAutoAdvanceTimer = setInterval(() => {
+      showGalleryImage(currentImageIndex + 1);
+    }, PROJEKTE_AUTO_ADVANCE_MS);
+  }
+
   // Bevorzugt ein Projekt MIT Bildern, falls der Stadtteil mehrere Projekte
   // hat (z. B. Harvestehude: Rothenbaumchaussee ohne Bilder, Hallerstraße
   // mit Bildern) – sonst wäre beim Klick nie etwas in der Galerie zu sehen.
@@ -159,6 +183,8 @@ if (stadtteileMapWrap) {
         dot.classList.toggle('active', i === currentImageIndex);
       });
     }
+
+    startProjekteAutoAdvance();
   }
 
   function renderCurrentProject() {
@@ -359,6 +385,43 @@ if (stadtteileMapWrap) {
     projekteNextBtn.addEventListener('click', goToNextProject);
   }
 
+  // Mobile: kleines Vorschau-Viereck unter dem Stadtteil-Text klappt sich per
+  // Touch zur großen Galerie auf (nimmt den Platz der Karte ein), mit
+  // Wisch-Navigation zwischen den Bildern und X zum Schließen.
+  const projekteImageClose = document.getElementById('projekte-image-close');
+
+  function expandProjektePreview() {
+    // Nur auf Mobile: die .is-expanded-Optik existiert ausschließlich in der
+    // Mobile-Media-Query, am Desktop bliebe die Karte sonst einfach nur
+    // ausgeblendet, ohne dass etwas an ihrer Stelle erscheint
+    if (!projekteImageWrap || window.innerWidth > MOBILE_BREAKPOINT) return;
+    closeRegionPanel();
+    projekteImageWrap.classList.add('is-expanded');
+    stadtteileMapWrap.classList.add('is-hidden');
+    startProjekteAutoAdvance();
+  }
+
+  function collapseProjektePreview() {
+    if (!projekteImageWrap) return;
+    projekteImageWrap.classList.remove('is-expanded');
+    stadtteileMapWrap.classList.remove('is-hidden');
+    stopProjekteAutoAdvance();
+  }
+
+  if (projekteImageWrap) {
+    projekteImageWrap.addEventListener('click', () => {
+      if (projekteImageWrap.classList.contains('is-expanded')) return;
+      expandProjektePreview();
+    });
+  }
+
+  if (projekteImageClose) {
+    projekteImageClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      collapseProjektePreview();
+    });
+  }
+
   // Suchleiste: Stadtteil, Straße, Postleitzahl oder ganzes Projekt suchen.
   // Ein Treffer wählt das Projekt genauso aus wie ein Kartenklick (Highlight
   // auf der Karte + Info-Box + Galerie).
@@ -461,7 +524,20 @@ if (stadtteileMapWrap) {
   // Adressliste. Noch keine Adressen/Bilder hinterlegt - hier eintragen,
   // sobald sie feststehen (Bilder aus dem Ordner "projects/").
   const regionProjects = {
-    deutschlandweit: [],
+    deutschlandweit: [
+      {
+        address: 'Düsternbrooker Weg, 24105 Kiel',
+        images: ['kiel-01.jpg', 'kiel-02.jpg', 'kiel-03.jpeg'],
+      },
+      {
+        address: 'Strandallee, 23669 Timmendorfer Strand',
+        images: ['lubek-01.jpeg', 'lubek-02.jpg', 'lubek-03.jpg'],
+      },
+      {
+        address: 'Wulfsdorfer Weg, 22926 Ahrensburg',
+        images: ['ahrensburg-01.jpg', 'ahrensburg-02.jpg', 'ahrensburg-03.jpg'],
+      },
+    ],
     ausland: [
       {
         address: 'Monte Carlo, 98000 Monaco',
@@ -618,6 +694,8 @@ if (stadtteileMapWrap) {
   function openRegionPanel(regionKey) {
     if (!projekteRegionPanel) return;
 
+    collapseProjektePreview();
+
     const entries = regionProjects[regionKey] || [];
     currentRegionEntries = entries;
 
@@ -690,6 +768,94 @@ if (stadtteileMapWrap) {
   if (projekteRegionBack) {
     projekteRegionBack.addEventListener('click', closeRegionPanel);
   }
+
+  const projekteRegionClose = document.getElementById('projekte-region-close');
+  if (projekteRegionClose) {
+    projekteRegionClose.addEventListener('click', closeRegionPanel);
+  }
+
+  // Mobile: per Wisch-Geste (links/rechts) statt durch Antippen wechseln -
+  // ruft onSwipeLeft/onSwipeRight nur bei eindeutig horizontalen Wischgesten
+  // auf, damit normales vertikales Scrollen der Seite nicht versehentlich
+  // etwas wechselt. stopPropagation optional, damit eine Wisch-Geste über
+  // der Bilder-Galerie nicht zusätzlich noch die Anschrift wechselt.
+  function attachHorizontalSwipe(el, onSwipeLeft, onSwipeRight, stopBubble) {
+    if (!el) return;
+    let startX = 0;
+    let startY = 0;
+
+    el.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      startX = touch.clientX;
+      startY = touch.clientY;
+    }, { passive: true });
+
+    el.addEventListener('touchend', (e) => {
+      const touch = e.changedTouches[0];
+      if (!touch) return;
+
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
+      if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY) * 1.5) return;
+
+      if (stopBubble) e.stopPropagation();
+      if (deltaX < 0) onSwipeLeft(); else onSwipeRight();
+    }, { passive: true });
+  }
+
+  // Anschrift wechseln (ganzes Fenster, zeigt auf dem Handy ohnehin immer
+  // nur die aktuell ausgewählte Anschrift, siehe CSS)
+  function getActiveRegionIndex() {
+    if (!projekteRegionAddressList) return -1;
+    const rows = Array.from(projekteRegionAddressList.querySelectorAll('li'));
+    return rows.findIndex((li) => li.classList.contains('active'));
+  }
+
+  attachHorizontalSwipe(
+    projekteRegionPanel,
+    () => {
+      if (!currentRegionEntries.length) return;
+      const i = getActiveRegionIndex();
+      if (i === -1) return;
+      selectRegionProject((i + 1) % currentRegionEntries.length);
+    },
+    () => {
+      if (!currentRegionEntries.length) return;
+      const i = getActiveRegionIndex();
+      if (i === -1) return;
+      selectRegionProject((i - 1 + currentRegionEntries.length) % currentRegionEntries.length);
+    }
+  );
+
+  // Bild wechseln (nur über der Galerie, stoppt die Weitergabe an das
+  // Fenster, damit ein Bild-Wisch nicht zugleich die Anschrift wechselt)
+  attachHorizontalSwipe(
+    projekteRegionGalleryWrap,
+    () => {
+      if (!regionImages.length) return;
+      showRegionImage(regionImageIndex + 1);
+    },
+    () => {
+      if (!regionImages.length) return;
+      showRegionImage(regionImageIndex - 1);
+    },
+    true
+  );
+
+  // Projekt-Vorschau (Stadtteil-Galerie): Bilder per Wisch-Geste wechseln,
+  // nur wirksam solange aufgeklappt (.is-expanded)
+  attachHorizontalSwipe(
+    projekteImageWrap,
+    () => {
+      if (!projekteImageWrap || !projekteImageWrap.classList.contains('is-expanded')) return;
+      showGalleryImage(currentImageIndex + 1);
+    },
+    () => {
+      if (!projekteImageWrap || !projekteImageWrap.classList.contains('is-expanded')) return;
+      showGalleryImage(currentImageIndex - 1);
+    }
+  );
 }
 
 // Wetter-Widget – Open-Meteo (kostenlos, kein API-Key nötig)
